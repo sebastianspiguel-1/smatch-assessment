@@ -15,59 +15,61 @@ const DailyChallenge = () => {
     { id: '3', text: 'Sync with PO on priorities' },
     { id: '4', text: 'Check in with Sam (QA)' },
   ]);
+  const [activeView, setActiveView] = useState('zoom');
+
 
   const teamMembers = [
-    { 
-      id: 1, 
-      name: 'Alex',
-      role: 'Backend Dev',
-      avatar: '👨‍💻',
-      status: 'camera-off',
-      mood: 'stressed',
-      issue: 'blocked-silent',
-      details: 'Has been stuck on API endpoints for 2 days. Not asking for help. Camera off - red flag.'
-    },
-    { 
-      id: 2, 
-      name: 'Jordan',
-      role: 'Frontend Dev',
-      avatar: '👩‍💻',
-      status: 'online',
-      mood: 'frustrated',
-      issue: 'interrupts',
-      details: 'Work is blocked waiting for Alex. Getting impatient. Interrupting constantly.'
-    },
-    { 
-      id: 3, 
-      name: 'Sam',
-      role: 'QA Engineer',
-      avatar: '🧑‍🔬',
-      status: 'online',
-      mood: 'disengaged',
-      issue: 'silent-frustrated',
-      details: 'Silent, arms crossed, looking away. Something is bothering them but not speaking up.'
-    },
-    { 
-      id: 4, 
-      name: 'Casey',
-      role: 'Designer',
-      avatar: '🎨',
-      status: 'online',
-      mood: 'positive',
-      issue: 'normal',
-      details: 'Collaborative and positive. No issues detected.'
-    },
-    { 
-      id: 5, 
-      name: 'Morgan',
-      role: 'Product Owner',
-      avatar: '📊',
-      status: 'late',
-      mood: 'distracted',
-      issue: 'distracted',
-      details: 'Joined 5 minutes late. Looking at phone. Not fully present.'
-    },
-  ];
+  { 
+    id: 1, 
+    name: 'Alex',
+    role: 'Backend Dev',
+    avatarUrl: 'https://i.pravatar.cc/200?img=12',
+    status: 'camera-off',
+    mood: 'stressed',
+    issue: 'blocked-silent',
+    details: 'Has been stuck on API endpoints for 2 days. Not asking for help. Camera off - red flag.'
+  },
+  { 
+    id: 2, 
+    name: 'Jordan',
+    role: 'Frontend Dev',
+    avatarUrl: 'https://i.pravatar.cc/200?img=32',
+    status: 'online',
+    mood: 'frustrated',
+    issue: 'interrupts',
+    details: 'Work is blocked waiting for Alex. Getting impatient. Interrupting constantly.'
+  },
+  { 
+    id: 3, 
+    name: 'Sam',
+    role: 'QA Engineer',
+    avatarUrl: 'https://i.pravatar.cc/200?img=47',
+    status: 'online',
+    mood: 'disengaged',
+    issue: 'silent-frustrated',
+    details: 'Silent, arms crossed, looking away. Something is bothering them but not speaking up.'
+  },
+  { 
+    id: 4, 
+    name: 'Casey',
+    role: 'Designer',
+    avatarUrl: 'https://i.pravatar.cc/200?img=68',
+    status: 'online',
+    mood: 'positive',
+    issue: 'normal',
+    details: 'Collaborative and positive. No issues detected.'
+  },
+  { 
+    id: 5, 
+    name: 'Morgan',
+    role: 'Product Owner',
+    avatarUrl: 'https://i.pravatar.cc/200?img=35',
+    status: 'late',
+    mood: 'distracted',
+    issue: 'distracted',
+    details: 'Joined 5 minutes late. Looking at phone. Not fully present.'
+  },
+];
 
   const dialogue = [
     { speaker: 'You', speakerId: 0, text: 'Good morning team! Let\'s start the daily. Alex, how are things going?', emotion: 'neutral' },
@@ -80,6 +82,27 @@ const DailyChallenge = () => {
     { speaker: 'Casey', speakerId: 4, text: 'I finished the mockups yesterday! Uploaded to Figma. Jordan, let me know if you need anything!', emotion: 'positive' },
     { speaker: 'Morgan', speakerId: 5, text: 'Sorry I\'m late, what did I miss?', emotion: 'distracted' },
   ];
+  const slackMessages = [
+  { id: 1, user: 'Jordan', time: '8:47 AM', text: 'Hey @Alex, any update on those API endpoints? Need them today.', reactions: ['👀'] },
+  { id: 2, user: 'Alex', time: '8:52 AM', text: 'Working on it', reactions: [] },
+  { id: 3, user: 'Jordan', time: '8:53 AM', text: 'That\'s what you said yesterday... I\'m completely blocked here.', reactions: ['😬'] },
+  { id: 4, user: 'Sam', time: '8:55 AM', text: '...', reactions: [] },
+  { id: 5, user: 'Casey', time: '9:01 AM', text: 'Morning team! 🎨 Just uploaded the new designs to Figma', reactions: ['🎉', '❤️'] },
+  { id: 6, user: 'Jordan', time: '9:03 AM', text: '@Alex seriously, I need a real ETA. This is getting ridiculous.', reactions: ['😤'] },
+];
+
+const emails = [
+  { id: 1, from: 'CEO', subject: 'RE: Q1 Feature Deadline', preview: 'I just heard from the client that the integration feature won\'t be ready for Friday\'s demo...', unread: true, priority: 'high' },
+  { id: 2, from: 'Morgan (PO)', subject: 'Sprint Planning - Missing Items', preview: 'We still don\'t have estimates for 3 critical stories...', unread: true, priority: 'medium' },
+  { id: 3, from: 'Alex', subject: 'Blocked on deployment', preview: 'Hey, I\'m running into some issues with the staging environment...', unread: false, priority: 'medium' },
+];
+
+const jiraTickets = [
+  { id: 'PROJ-142', title: 'API endpoint integration', assignee: 'Alex', status: 'In Progress', priority: 'High', storyPoints: 8 },
+  { id: 'PROJ-143', title: 'Frontend integration with API', assignee: 'Jordan', status: 'Blocked', priority: 'High', storyPoints: 5 },
+  { id: 'PROJ-144', title: 'QA testing for new feature', assignee: 'Sam', status: 'To Do', priority: 'Medium', storyPoints: 3 },
+  { id: 'PROJ-145', title: 'Update design mockups', assignee: 'Casey', status: 'Done', priority: 'Low', storyPoints: 2 },
+];
 
   useEffect(() => {
     if (stage === 'action' && timeRemaining > 0) {
@@ -130,7 +153,7 @@ const DailyChallenge = () => {
               className={`team-card-intro ${member.status}`}
               onClick={() => setSelectedMember(member)}
             >
-              <div className="avatar-large">{member.avatar}</div>
+              <img src={member.avatarUrl} alt={member.name} className="avatar-large" />
               <div className="member-info">
                 <div className="member-name">{member.name}</div>
                 <div className="member-role">{member.role}</div>
@@ -148,7 +171,7 @@ const DailyChallenge = () => {
           <div className="member-detail-modal" onClick={() => setSelectedMember(null)}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
               <button className="close-btn" onClick={() => setSelectedMember(null)}>×</button>
-              <div className="avatar-huge">{selectedMember.avatar}</div>
+              <img src={selectedMember.avatarUrl} alt={selectedMember.name} className="avatar-huge" />
               <h2>{selectedMember.name}</h2>
               <p className="role-badge">{selectedMember.role}</p>
               <p className="member-details">{selectedMember.details}</p>
@@ -163,76 +186,180 @@ const DailyChallenge = () => {
     );
   }
 
-  if (stage === 'daily') {
-    const activeSpeaker = dialogue[currentDialogue]?.speakerId;
+ if (stage === 'daily') {
+  const activeSpeaker = dialogue[currentDialogue]?.speakerId;
 
-    return (
-      <div className="challenge-container">
-        <div className="zoom-header">
-          <h2>⏰ 9:05 AM - Daily Standup</h2>
-          <div className="zoom-controls">
-            <button className="zoom-btn">🎤 Mute</button>
-            <button className="zoom-btn">📹 Stop Video</button>
-            <button className="zoom-btn leave">Leave</button>
-          </div>
+  return (
+    <div className="challenge-container">
+      <div className="zoom-header">
+        <h2>⏰ 9:05 AM - Daily Standup</h2>
+        <div className="view-tabs">
+          <button 
+            className={`view-tab ${activeView === 'zoom' ? 'active' : ''}`}
+            onClick={() => setActiveView('zoom')}
+          >
+            📹 Zoom
+          </button>
+          <button 
+            className={`view-tab ${activeView === 'slack' ? 'active' : ''}`}
+            onClick={() => setActiveView('slack')}
+          >
+            💬 Slack
+          </button>
+          <button 
+            className={`view-tab ${activeView === 'email' ? 'active' : ''}`}
+            onClick={() => setActiveView('email')}
+          >
+            📧 Email
+          </button>
+          <button 
+            className={`view-tab ${activeView === 'jira' ? 'active' : ''}`}
+            onClick={() => setActiveView('jira')}
+          >
+            📋 Jira
+          </button>
         </div>
+      </div>
 
-        <div className="zoom-grid">
-          {teamMembers.map(member => (
-            <div 
-              key={member.id}
-              className={`zoom-participant ${activeSpeaker === member.id ? 'speaking' : ''} ${member.status}`}
-              onClick={() => setSelectedMember(member)}
-            >
-              <div className="participant-video">
-                {member.status === 'camera-off' ? (
-                  <div className="camera-off-screen">
-                    <div className="avatar-zoom">{member.avatar}</div>
-                    <p>Camera Off</p>
+      {/* ZOOM VIEW */}
+      {activeView === 'zoom' && (
+        <>
+          <div className="zoom-grid">
+            {teamMembers.map(member => (
+              <div 
+                key={member.id}
+                className={`zoom-participant ${activeSpeaker === member.id ? 'speaking' : ''} ${member.status}`}
+                onClick={() => setSelectedMember(member)}
+              >
+                <div className="participant-video">
+                  {member.status === 'camera-off' ? (
+                    <div className="camera-off-screen">
+                      <img src={member.avatarUrl} alt={member.name} className="avatar-zoom" />
+                      <p>Camera Off</p>
+                    </div>
+                  ) : (
+                    <img src={member.avatarUrl} alt={member.name} className="avatar-zoom" />
+                  )}
+                  <div className="participant-name">{member.name}</div>
+                  {activeSpeaker === member.id && (
+                    <div className="speaking-indicator">🔊 Speaking...</div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="dialogue-feed">
+            {dialogue.slice(0, currentDialogue + 1).map((line, index) => (
+              <div 
+                key={index} 
+                className={`dialogue-bubble ${line.speakerId === 0 ? 'your-bubble' : ''} ${line.emotion}`}
+              >
+                <strong>{line.speaker}:</strong> {line.text}
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
+      {/* SLACK VIEW */}
+      {activeView === 'slack' && (
+        <div className="slack-view">
+          <div className="slack-header">
+            <h3>#team-standup</h3>
+            <p className="channel-desc">Daily standup channel · 5 members</p>
+          </div>
+          <div className="slack-messages">
+            {slackMessages.map(msg => (
+              <div key={msg.id} className="slack-message">
+                <div className="msg-header">
+                  <strong>{msg.user}</strong>
+                  <span className="msg-time">{msg.time}</span>
+                </div>
+                <div className="msg-text">{msg.text}</div>
+                {msg.reactions.length > 0 && (
+                  <div className="msg-reactions">
+                    {msg.reactions.map((reaction, i) => (
+                      <span key={i} className="reaction">{reaction}</span>
+                    ))}
                   </div>
-                ) : (
-                  <div className="avatar-zoom">{member.avatar}</div>
-                )}
-                <div className="participant-name">{member.name}</div>
-                {activeSpeaker === member.id && (
-                  <div className="speaking-indicator">🔊 Speaking...</div>
                 )}
               </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="dialogue-feed">
-          {dialogue.slice(0, currentDialogue + 1).map((line, index) => (
-            <div 
-              key={index} 
-              className={`dialogue-bubble ${line.speakerId === 0 ? 'your-bubble' : ''} ${line.emotion}`}
-            >
-              <strong>{line.speaker}:</strong> {line.text}
-            </div>
-          ))}
-        </div>
-
-        {currentDialogue >= dialogue.length - 1 && (
-          <button className="primary-btn" onClick={() => setStage('detection')}>
-            Daily Ended - Analyze What Happened →
-          </button>
-        )}
-
-        {selectedMember && (
-          <div className="member-detail-modal" onClick={() => setSelectedMember(null)}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-              <button className="close-btn" onClick={() => setSelectedMember(null)}>×</button>
-              <div className="avatar-huge">{selectedMember.avatar}</div>
-              <h2>{selectedMember.name}</h2>
-              <p className="role-badge">{selectedMember.role}</p>
-              <p className="member-details">{selectedMember.details}</p>
-            </div>
+            ))}
           </div>
-        )}
-      </div>
-    );
-  }
+        </div>
+      )}
+
+      {/* EMAIL VIEW */}
+      {activeView === 'email' && (
+        <div className="email-view">
+          <div className="email-header">
+            <h3>Inbox</h3>
+            <p className="inbox-count">3 messages</p>
+          </div>
+          <div className="email-list">
+            {emails.map(email => (
+              <div key={email.id} className={`email-item ${email.unread ? 'unread' : ''}`}>
+                <div className="email-from">
+                  {email.unread && <span className="unread-dot">●</span>}
+                  <strong>{email.from}</strong>
+                  {email.priority === 'high' && <span className="priority-badge">! High Priority</span>}
+                </div>
+                <div className="email-subject">{email.subject}</div>
+                <div className="email-preview">{email.preview}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* JIRA VIEW */}
+      {activeView === 'jira' && (
+        <div className="jira-view">
+          <div className="jira-header">
+            <h3>Sprint Board</h3>
+            <p className="sprint-info">Sprint 12 · 3 days remaining</p>
+          </div>
+          <div className="jira-tickets">
+            {jiraTickets.map(ticket => (
+              <div key={ticket.id} className={`jira-ticket priority-${ticket.priority.toLowerCase()}`}>
+                <div className="ticket-header">
+                  <span className="ticket-id">{ticket.id}</span>
+                  <span className={`ticket-status status-${ticket.status.toLowerCase().replace(' ', '-')}`}>
+                    {ticket.status}
+                  </span>
+                </div>
+                <div className="ticket-title">{ticket.title}</div>
+                <div className="ticket-footer">
+                  <span className="ticket-assignee">👤 {ticket.assignee}</span>
+                  <span className="ticket-points">{ticket.storyPoints} pts</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {currentDialogue >= dialogue.length - 1 && (
+        <button className="primary-btn" onClick={() => setStage('detection')}>
+          Daily Ended - Analyze What Happened →
+        </button>
+      )}
+
+      {selectedMember && (
+        <div className="member-detail-modal" onClick={() => setSelectedMember(null)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="close-btn" onClick={() => setSelectedMember(null)}>×</button>
+            <img src={selectedMember.avatarUrl} alt={selectedMember.name} className="avatar-huge" />
+            <h2>{selectedMember.name}</h2>
+            <p className="role-badge">{selectedMember.role}</p>
+            <p className="member-details">{selectedMember.details}</p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
   if (stage === 'detection') {
     return (

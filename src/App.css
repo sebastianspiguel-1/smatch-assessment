@@ -1,38 +1,297 @@
-.App {
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #0a0a0a;
+  color: #fff;
+}
+
+/* ============================================ */
+/* INTRO SCREEN */
+/* ============================================ */
+
+.intro-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+  padding: 40px 20px;
+  animation: fadeIn 1s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.intro-content {
+  max-width: 800px;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.glitch-text h1 {
+  font-size: 72px;
+  font-weight: 900;
+  margin-bottom: 10px;
+  letter-spacing: -2px;
+  background: linear-gradient(45deg, #ff006e, #8338ec);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: glitch 3s infinite;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.glitch-text h2 {
+  font-size: 48px;
+  font-weight: 700;
+  margin-bottom: 60px;
+  color: #fff;
+  opacity: 0.9;
 }
 
-.App-header {
-  background-color: #282c34;
+@keyframes glitch {
+  0%, 100% { text-shadow: 2px 2px #ff006e, -2px -2px #8338ec; }
+  50% { text-shadow: -2px -2px #ff006e, 2px 2px #8338ec; }
+}
+
+.story {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 40px;
+  margin: 40px 0;
+  text-align: left;
+}
+
+.story p {
+  font-size: 20px;
+  line-height: 2;
+  margin-bottom: 12px;
+  opacity: 0.9;
+}
+
+.story .time {
+  color: #8338ec;
+  font-weight: 700;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.story .highlight {
+  color: #ffbe0b;
+  font-weight: 700;
+}
+
+.story .danger {
+  color: #ff006e;
+  font-weight: 700;
+}
+
+.story .final {
+  font-size: 22px;
+  font-weight: 600;
+  margin-top: 20px;
+  color: #ff006e;
+}
+
+.rules {
+  background: rgba(131, 56, 236, 0.1);
+  border: 2px solid #8338ec;
+  border-radius: 20px;
+  padding: 30px;
+  margin: 40px 0;
+}
+
+.rules h3 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #8338ec;
+}
+
+.rules ul {
+  list-style: none;
+  text-align: left;
+}
+
+.rules li {
+  font-size: 18px;
+  margin: 15px 0;
+  padding-left: 10px;
+}
+
+.rules strong {
+  color: #ffbe0b;
+}
+
+.start-btn {
+  background: linear-gradient(45deg, #ff006e, #8338ec);
+  color: white;
+  border: none;
+  padding: 20px 60px;
+  font-size: 24px;
+  font-weight: 700;
+  border-radius: 50px;
+  cursor: pointer;
+  margin: 40px 0 20px;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.start-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 40px rgba(255, 0, 110, 0.4);
+}
+
+.start-btn .arrow {
+  font-size: 28px;
+  transition: transform 0.3s ease;
+}
+
+.start-btn:hover .arrow {
+  transform: translateX(5px);
+}
+
+.disclaimer {
+  font-size: 14px;
+  opacity: 0.6;
+  margin-top: 20px;
+}
+
+/* ============================================ */
+/* ASSESSMENT SCREEN */
+/* ============================================ */
+
+.assessment-screen {
   min-height: 100vh;
+  background: #0f0f0f;
   display: flex;
   flex-direction: column;
+}
+
+.header {
+  background: #1a1a1a;
+  border-bottom: 2px solid #333;
+  padding: 20px 30px;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+}
+
+.team-health {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.health-bar {
+  width: 200px;
+  height: 20px;
+  background: #333;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.health-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff006e, #ffbe0b);
+  transition: width 0.5s ease;
+}
+
+.health-percent {
+  color: #ffbe0b;
+  font-weight: 700;
+}
+
+.timer {
+  display: flex;
+  gap: 30px;
+  font-size: 16px;
+}
+
+.workspace {
+  display: flex;
+  flex: 1;
+}
+
+.sidebar {
+  width: 80px;
+  background: #1a1a1a;
+  border-right: 2px solid #333;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 10px;
+  gap: 15px;
+}
+
+.app-btn {
+  background: transparent;
+  border: 2px solid #333;
+  color: #fff;
+  font-size: 24px;
+  padding: 15px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.app-btn:hover {
+  background: #8338ec;
+  border-color: #8338ec;
+}
+
+.app-btn.active {
+  background: #8338ec;
+  border-color: #8338ec;
+}
+
+.main-content {
+  flex: 1;
+  padding: 40px;
+}
+
+.main-content h2 {
+  font-size: 32px;
+  margin-bottom: 20px;
+  color: #8338ec;
+}
+
+.ai-assistant {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: linear-gradient(45deg, #8338ec, #3a86ff);
   color: white;
+  border: none;
+  padding: 18px 30px;
+  font-size: 18px;
+  font-weight: 700;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 5px 20px rgba(131, 56, 236, 0.4);
+  transition: all 0.3s ease;
 }
 
-.App-link {
-  color: #61dafb;
+.ai-assistant:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(131, 56, 236, 0.6);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* ============================================ */
+/* RESPONSIVE */
+/* ============================================ */
+
+@media (max-width: 768px) {
+  .glitch-text h1 { font-size: 48px; }
+  .glitch-text h2 { font-size: 32px; }
+  .story p { font-size: 16px; }
+  .header { flex-direction: column; gap: 20px; }
 }

@@ -175,47 +175,6 @@ body {
   flex-direction: column;
 }
 
-.header {
-  background: #1a1a1a;
-  border-bottom: 2px solid #333;
-  padding: 20px 30px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.team-health {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.health-bar {
-  width: 200px;
-  height: 20px;
-  background: #333;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.health-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #ff006e, #ffbe0b);
-  transition: width 0.5s ease;
-}
-
-.health-percent {
-  color: #ffbe0b;
-  font-weight: 700;
-}
-
-.timer {
-  display: flex;
-  gap: 30px;
-  font-size: 16px;
-}
 
 .workspace {
   display: flex;
@@ -245,12 +204,12 @@ body {
 
 .app-btn:hover {
   background: #8338ec;
-  border-color: #8338ec;
+  border-color: #ffffff;
 }
 
 .app-btn.active {
   background: #8338ec;
-  border-color: #8338ec;
+  border-color: #ffffff;
 }
 
 .main-content {
@@ -266,7 +225,7 @@ body {
 
 .ai-assistant {
   position: fixed;
-  bottom: 30px;
+  bottom: 60px;
   right: 30px;
   background: linear-gradient(45deg, #8338ec, #3a86ff);
   color: white;

@@ -120,6 +120,28 @@ const jiraTickets = [
     }
   }, [stage, currentDialogue, dialogue.length]);
 
+  const AssessmentHeader = () => (
+  <div className="assessment-header-fixed">
+    <div className="team-health-indicator">
+      <span className="label">Team Health</span>
+      <div className="health-bar-main">
+        <div 
+          className={`health-fill-main ${teamHealth <= 20 ? 'critical' : ''}`}
+          style={{width: `${teamHealth}%`}}
+        ></div>
+      </div>
+      <span className="health-percent">{teamHealth}%</span>
+    </div>
+    <div className="timer-indicator">
+      <span className="time-label">Time Remaining</span>
+      <span className={`time-remaining ${timeRemaining <= 300 ? 'warning' : ''}`}>
+        {formatTime(timeRemaining)}
+      </span>
+    </div>
+  </div>
+);
+
+
   const movePriority = (index, direction) => {
     const newPriorities = [...priorities];
     const newIndex = direction === 'up' ? index - 1 : index + 1;
@@ -190,21 +212,8 @@ const jiraTickets = [
   const activeSpeaker = dialogue[currentDialogue]?.speakerId;
 
   return (
-    <div className="challenge-container">
-        {/* ASSESSMENT HEADER - TEAM HEALTH & TIMER */}
-<div className="assessment-header-fixed">
-  <div className="team-health-indicator">
-    <span className="label">Team Health</span>
-    <div className="health-bar-main">
-      <div className="health-fill-main" style={{width: `${teamHealth}%`}}></div>
-    </div>
-    <span className="health-percent">{teamHealth}%</span>
-  </div>
-  <div className="timer-indicator">
-    <span className="time-label">Time Remaining</span>
-    <span className="time-remaining">{formatTime(timeRemaining)}</span>
-  </div>
-</div>
+  <div className="challenge-container">
+    <AssessmentHeader />
       <div className="zoom-header">
         <h2>⏰ 9:05 AM - Daily Standup</h2>
         <div className="view-tabs">
@@ -377,8 +386,9 @@ const jiraTickets = [
 
   if (stage === 'detection') {
     return (
-      <div className="challenge-container">
-        <div className="detection-header">
+  <div className="challenge-container">
+    <AssessmentHeader />
+    <div className="detection-header">
           <h2>🔍 What problems did you detect?</h2>
           <p className="hint">Click all issues you noticed (you'll be scored on accuracy)</p>
         </div>
@@ -438,8 +448,9 @@ const jiraTickets = [
 
   if (stage === 'priority') {
     return (
-      <div className="challenge-container">
-        <div className="priority-header">
+  <div className="challenge-container">
+    <AssessmentHeader />
+    <div className="priority-header">
           <h2>📊 Prioritize Your Actions</h2>
           <p className="timer-large">⏱️ {formatTime(timeRemaining)} remaining</p>
           <p className="hint">Use arrows to reorder - what do you tackle FIRST?</p>
@@ -479,8 +490,9 @@ const jiraTickets = [
 
   if (stage === 'action') {
     return (
-      <div className="challenge-container">
-        <div className="action-header">
+  <div className="challenge-container">
+    <AssessmentHeader />
+    <div className="action-header">
           <h2>⚡ Execute Your #1 Priority</h2>
           <p className="priority-chosen">You chose: <strong>{priorities[0].text}</strong></p>
         </div>
@@ -518,8 +530,9 @@ const jiraTickets = [
     const detectionScore = Math.round((detectedCorrect.length / correctIssues.length) * 10);
 
     return (
-      <div className="challenge-container">
-        <div className="results-hero">
+  <div className="challenge-container">
+    <AssessmentHeader />
+    <div className="results-hero">
           <h1>📊 Challenge Complete!</h1>
           <div className="final-score">{detectionScore}/10</div>
           <p className="score-label">Team Reading Score</p>

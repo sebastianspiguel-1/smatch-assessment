@@ -105,11 +105,11 @@ const jiraTickets = [
 ];
 
   useEffect(() => {
-    if (stage === 'action' && timeRemaining > 0) {
-      const timer = setTimeout(() => setTimeRemaining(timeRemaining - 1), 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [stage, timeRemaining]);
+  if ((stage === 'daily' || stage === 'action') && timeRemaining > 0) {
+    const timer = setTimeout(() => setTimeRemaining(timeRemaining - 1), 1000);
+    return () => clearTimeout(timer);
+  }
+}, [stage, timeRemaining]);
 
   useEffect(() => {
     if (stage === 'daily' && currentDialogue < dialogue.length - 1) {
@@ -191,6 +191,20 @@ const jiraTickets = [
 
   return (
     <div className="challenge-container">
+        {/* ASSESSMENT HEADER - TEAM HEALTH & TIMER */}
+<div className="assessment-header-fixed">
+  <div className="team-health-indicator">
+    <span className="label">Team Health</span>
+    <div className="health-bar-main">
+      <div className="health-fill-main" style={{width: `${teamHealth}%`}}></div>
+    </div>
+    <span className="health-percent">{teamHealth}%</span>
+  </div>
+  <div className="timer-indicator">
+    <span className="time-label">Time Remaining</span>
+    <span className="time-remaining">{formatTime(timeRemaining)}</span>
+  </div>
+</div>
       <div className="zoom-header">
         <h2>⏰ 9:05 AM - Daily Standup</h2>
         <div className="view-tabs">
@@ -396,12 +410,28 @@ const jiraTickets = [
         </div>
 
         <button 
-          className="primary-btn" 
-          onClick={() => setStage('priority')}
-          disabled={detectedIssues.length === 0}
-        >
-          Continue ({detectedIssues.length} issues detected) →
-        </button>
+  className="primary-btn" 
+  onClick={() => {
+    // Calcular cambio en Team Health
+    const correctIssues = ['alex-blocked', 'jordan-impatient', 'sam-silent', 'dependency', 'tension', 'morgan-distracted'];
+    const detectedCorrect = detectedIssues.filter(i => correctIssues.includes(i));
+    const detectedWrong = detectedIssues.filter(i => !correctIssues.includes(i));
+    const missed = correctIssues.filter(i => !detectedIssues.includes(i));
+    
+    let healthChange = 0;
+    healthChange += detectedCorrect.length * 10; // +10% por cada correcto
+    healthChange -= detectedWrong.length * 10;   // -10% por cada falso positivo
+    healthChange -= missed.length * 5;           // -5% por cada que te perdiste
+    
+    const newHealth = Math.max(0, Math.min(100, teamHealth + healthChange));
+    setTeamHealth(newHealth);
+    
+    setStage('priority');
+  }}
+  disabled={detectedIssues.length === 0}
+>
+  Continue ({detectedIssues.length} issues detected) →
+</button>
       </div>
     );
   }

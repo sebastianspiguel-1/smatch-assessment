@@ -1,11 +1,11 @@
 import React from 'react';
 import './App.css';
-import DailyChallenge from './DailyChallenge';
+import ChallengeMenu from './ChallengeMenu';
 
 function App() {
   return (
     <div className="app-container">
-      <DailyChallenge />
+      <ChallengeMenu />
       <button className="ai-assistant">🤖 AI Assistant</button>
     </div>
   );

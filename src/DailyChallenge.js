@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './DailyChallenge.css';
 
-const DailyChallenge = () => {
+const DailyChallenge = ({ language: initialLanguage, onBack }) => {
   const [stage, setStage] = useState('intro');
   const [currentDialogue, setCurrentDialogue] = useState(0);
   const [detectedIssues, setDetectedIssues] = useState([]);
@@ -16,8 +16,186 @@ const DailyChallenge = () => {
     { id: '4', text: 'Check in with Sam (QA)' },
   ]);
   const [activeView, setActiveView] = useState('zoom');
+  const [slackInput, setSlackInput] = useState('');
+  const [slackSent, setSlackSent] = useState([]);
+  const [selectedEmail, setSelectedEmail] = useState(null);
+  const [audioMuted, setAudioMuted] = useState(false);
+const [language, setLanguage] = useState(initialLanguage || 'en');
+  const [jiraBoardTickets, setJiraBoardTickets] = useState({
+  todo: [
+    { id: 'PROJ-144', title: 'QA testing for new feature', assignee: 'Sam', priority: 'Medium', storyPoints: 3 }
+  ],
+  inProgress: [
+    { id: 'PROJ-142', title: 'API endpoint integration', assignee: 'Alex', priority: 'High', storyPoints: 8 }
+  ],
+  blocked: [
+    { id: 'PROJ-143', title: 'Frontend integration with API', assignee: 'Jordan', priority: 'High', storyPoints: 5 }
+  ],
+  done: [
+    { id: 'PROJ-145', title: 'Update design mockups', assignee: 'Casey', priority: 'Low', storyPoints: 2 }
+  ]
+});
+const [draggedTicket, setDraggedTicket] = useState(null);
+// Translations
+const translations = {
+  en: {
+    // INTRO
+    introTitle1: "YOUR WORST DAY",
+    introTitle2: "AS A SCRUM MASTER",
+    introTime: "Monday, 9:00 AM",
+    introStory1: "You just arrived at the office with your coffee.",
+    introStory2Slack: "Slack:",
+    introStory2Messages: "47 unread messages",
+    introStory3Calendar: "Calendar:",
+    introStory3Meetings: "6 back-to-back meetings",
+    introStory4Sprint: "Sprint ends in 3 days. You're at",
+    introStory4Completion: "60% completion",
+    introStory5: "Your phone vibrates. Message from the CEO.",
+    rulesTitle: "THE RULES",
+    rule1: "You have",
+    rule1Time: "45 minutes",
+    rule2: "Your camera and screen are",
+    rule2Recording: "recording",
+    rule3: "You can use",
+    rule3AI: "any AI tool",
+    rule3You: "you want",
+    rule4: "Your goal: Keep the team alive",
+    startBtn: "START ASSESSMENT",
+    disclaimer: "This simulation will test your real skills as a Scrum Master.\nGood luck. You'll need it.",
+    
+    // CHALLENGE 1
+    challenge1Title: "🎬 Challenge 1: The Daily From Hell",
+    challenge1Desc: "It's 9:00 AM. Time for the daily standup. You join the Zoom call and immediately sense something is... off.",
+    joinDaily: "Join Daily Standup →",
+    
+    // TEAM MEMBERS
+    teamHealth: "Team Health",
+    timeRemaining: "Time Remaining",
+    cameraOff: "🔴 Camera OFF",
+    online: "🟢 Online",
+    joinedLate: "🟡 Joined Late",
+    
+    // DETECTION
+    detectionTitle: "🔍 What problems did you detect?",
+    detectionHint: "Click all issues you noticed (you'll be scored on accuracy)",
+    continue: "Continue",
+    issuesDetected: "issues detected",
+    
+    // ISSUES
+    issueAlexBlocked: "🚧 Alex is blocked but not saying it",
+    issueJordanFrustrated: "😤 Jordan is frustrated and interrupting",
+    issueSamDisengaged: "🤐 Sam (QA) is disengaged/unhappy",
+    issueMorganDistracted: "📱 Morgan (PO) is distracted",
+    issueDependency: "🔗 Dependency blocker (Jordan waiting for Alex)",
+    issueTension: "⚡ Tension building between team members",
+    issueCaseyTrap: "❌ Casey has a problem (TRAP - this is wrong)",
+    
+    // PRIORITY
+    priorityTitle: "📊 Prioritize Your Actions",
+    priorityHint: "Use arrows to reorder - what do you tackle FIRST?",
+    confirmPriorities: "Confirm Priorities →",
+    
+    // ACTIONS
+    action1: "Unblock Alex immediately",
+    action2: "Address team tension",
+    action3: "Sync with PO on priorities",
+    action4: "Check in with Sam (QA)",
+    
+    // RESULTS
+    resultsTitle: "📊 Challenge Complete!",
+    scoreLabel: "Team Reading Score",
+    correctlyDetected: "✅ Correctly Detected",
+    missed: "❌ Missed",
+    falsePositives: "⚠️ False Positives",
+    yourPrioritization: "📊 Your Prioritization:",
+    youChose: "You chose to tackle:",
+    first: "first.",
+    feedbackGood: "✅ Excellent! Unblocking dependencies is critical.",
+    feedbackOk: "🟡 Consider: Dependencies usually need immediate attention.",
+    
+    continueChallenge2: "Continue to Challenge 2 →",
+  },
+  
+  es: {
+    // INTRO
+    introTitle1: "TU PEOR DÍA",
+    introTitle2: "COMO SCRUM MASTER",
+    introTime: "Lunes, 9:00 AM",
+    introStory1: "Acabás de llegar a la oficina con tu café.",
+    introStory2Slack: "Slack:",
+    introStory2Messages: "47 mensajes sin leer",
+    introStory3Calendar: "Calendario:",
+    introStory3Meetings: "6 reuniones seguidas",
+    introStory4Sprint: "El sprint termina en 3 días. Estás al",
+    introStory4Completion: "60% de completitud",
+    introStory5: "Tu teléfono vibra. Mensaje del CEO.",
+    rulesTitle: "LAS REGLAS",
+    rule1: "Tenés",
+    rule1Time: "45 minutos",
+    rule2: "Tu cámara y pantalla están",
+    rule2Recording: "grabando",
+    rule3: "Podés usar",
+    rule3AI: "cualquier herramienta de IA",
+    rule3You: "que quieras",
+    rule4: "Tu objetivo: Mantener al equipo vivo",
+    startBtn: "INICIAR EVALUACIÓN",
+    disclaimer: "Esta simulación pondrá a prueba tus habilidades reales como Scrum Master.\nBuena suerte. La vas a necesitar.",
+    
+    // CHALLENGE 1
+    challenge1Title: "🎬 Desafío 1: El Daily del Infierno",
+    challenge1Desc: "Son las 9:00 AM. Hora del daily standup. Te unís a la llamada de Zoom e inmediatamente sentís que algo anda... mal.",
+    joinDaily: "Unirse al Daily Standup →",
+    
+    // TEAM MEMBERS
+    teamHealth: "Salud del Equipo",
+    timeRemaining: "Tiempo Restante",
+    cameraOff: "🔴 Cámara APAGADA",
+    online: "🟢 En línea",
+    joinedLate: "🟡 Llegó Tarde",
+    
+    // DETECTION
+    detectionTitle: "🔍 ¿Qué problemas detectaste?",
+    detectionHint: "Hacé click en todos los problemas que notaste (se calificará tu precisión)",
+    continue: "Continuar",
+    issuesDetected: "problemas detectados",
+    
+    // ISSUES
+    issueAlexBlocked: "🚧 Alex está bloqueado pero no lo dice",
+    issueJordanFrustrated: "😤 Jordan está frustrado e interrumpiendo",
+    issueSamDisengaged: "🤐 Sam (QA) está desconectado/infeliz",
+    issueMorganDistracted: "📱 Morgan (PO) está distraído",
+    issueDependency: "🔗 Bloqueador de dependencia (Jordan esperando a Alex)",
+    issueTension: "⚡ Tensión creciendo entre miembros del equipo",
+    issueCaseyTrap: "❌ Casey tiene un problema (TRAMPA - esto es incorrecto)",
+    
+    // PRIORITY
+    priorityTitle: "📊 Priorizá tus Acciones",
+    priorityHint: "Usá las flechas para reordenar - ¿qué abordás PRIMERO?",
+    confirmPriorities: "Confirmar Prioridades →",
+    
+    // ACTIONS
+    action1: "Desbloquear a Alex inmediatamente",
+    action2: "Abordar la tensión del equipo",
+    action3: "Sincronizar con PO sobre prioridades",
+    action4: "Hablar con Sam (QA)",
+    
+    // RESULTS
+    resultsTitle: "📊 ¡Desafío Completado!",
+    scoreLabel: "Puntaje de Lectura del Equipo",
+    correctlyDetected: "✅ Detectado Correctamente",
+    missed: "❌ Te Perdiste",
+    falsePositives: "⚠️ Falsos Positivos",
+    yourPrioritization: "📊 Tu Priorización:",
+    youChose: "Elegiste abordar:",
+    first: "primero.",
+    feedbackGood: "✅ ¡Excelente! Desbloquear dependencias es crítico.",
+    feedbackOk: "🟡 Considerá: Las dependencias usualmente necesitan atención inmediata.",
+    continueChallenge2: "Continuar al Desafío 2 →",
+  }
+};
 
-
+// Función helper para obtener texto traducido
+const t = (key) => translations[language][key] || key;
   const teamMembers = [
   { 
     id: 1, 
@@ -112,13 +290,24 @@ const jiraTickets = [
 }, [stage, timeRemaining]);
 
   useEffect(() => {
-    if (stage === 'daily' && currentDialogue < dialogue.length - 1) {
-      const timer = setTimeout(() => {
-        setCurrentDialogue(currentDialogue + 1);
-      }, 3000);
-      return () => clearTimeout(timer);
+  if (stage === 'daily' && currentDialogue < dialogue.length - 1) {
+    // Reproducir audio del diálogo actual
+    const currentLine = dialogue[currentDialogue];
+    if (currentLine && currentLine.text !== '...') {
+      speakDialogue(currentLine.text, currentLine.speakerId);
     }
-  }, [stage, currentDialogue, dialogue.length]);
+    
+    // Calcular tiempo según longitud del texto
+    // Fórmula: 50ms por palabra + 2 segundos de pausa
+    const words = currentLine.text.split(' ').length;
+    const speechTime = (words * 500) + 2000; // 500ms por palabra + 2s pausa
+    
+    const timer = setTimeout(() => {
+      setCurrentDialogue(currentDialogue + 1);
+    }, speechTime);
+    return () => clearTimeout(timer);
+  }
+}, [stage, currentDialogue, dialogue.length]);
 
   const AssessmentHeader = () => (
   <div className="assessment-header-fixed">
@@ -157,56 +346,102 @@ const jiraTickets = [
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
+  const speakDialogue = (text, speakerId) => {
+  // Si está muteado, no reproducir
+  if (audioMuted) return;
+  
+  // Cancelar cualquier audio anterior
+  window.speechSynthesis.cancel();
+  
+  const utterance = new SpeechSynthesisUtterance(text);
+  const voices = window.speechSynthesis.getVoices();
+  
+  // Asignar voces según personaje
+  switch(speakerId) {
+    case 0: // You (Scrum Master)
+      utterance.voice = voices.find(v => v.name.includes('Samantha') || v.name.includes('Karen')) || voices[0];
+      utterance.pitch = 1;
+      utterance.rate = 1;
+      break;
+    case 1: // Alex (Backend Dev) - Voz masculina grave, insegura
+      utterance.voice = voices.find(v => v.name.includes('Daniel') || v.name.includes('Fred')) || voices[1];
+      utterance.pitch = 0.8;
+      utterance.rate = 0.9;
+      break;
+    case 2: // Jordan (Frontend Dev) - Voz femenina frustrada, rápida
+      utterance.voice = voices.find(v => v.name.includes('Samantha') || v.name.includes('Victoria')) || voices[2];
+      utterance.pitch = 1.2;
+      utterance.rate = 1.1;
+      break;
+    case 3: // Sam (QA) - Voz neutral, monótona
+      utterance.voice = voices.find(v => v.name.includes('Alex')) || voices[3];
+      utterance.pitch = 0.9;
+      utterance.rate = 0.8;
+      break;
+    case 4: // Casey (Designer) - Voz alegre, energética
+      utterance.voice = voices.find(v => v.name.includes('Samantha') || v.name.includes('Tessa')) || voices[4];
+      utterance.pitch = 1.3;
+      utterance.rate = 1.0;
+      break;
+    case 5: // Morgan (PO) - Voz distraída, apresurada
+      utterance.voice = voices.find(v => v.name.includes('Victoria') || v.name.includes('Allison')) || voices[5];
+      utterance.pitch = 1.1;
+      utterance.rate = 1.2;
+      break;
+    default:
+      utterance.voice = voices[0];
+  }
+  
+  window.speechSynthesis.speak(utterance);
+};
 
   if (stage === 'intro') {
-    return (
-      <div className="challenge-container">
-        <div className="challenge-header">
-          <h1>🎬 Challenge 1: The Daily From Hell</h1>
-          <p className="challenge-desc">
-            It's 9:00 AM. Time for the daily standup. You join the Zoom call and immediately sense something is... off.
-          </p>
+  return (
+    <div className="intro-screen">
+      <div className="intro-content">
+        <div className="glitch-text">
+          <h1>{language === 'en' ? 'YOUR WORST DAY' : 'TU PEOR DÍA'}</h1>
+          <h2>{language === 'en' ? 'AS A SCRUM MASTER' : 'COMO SCRUM MASTER'}</h2>
+        </div>
+        
+        <div className="story">
+          <p className="time">{language === 'en' ? 'Monday, 9:00 AM' : 'Lunes, 9:00 AM'}</p>
+          <p>{language === 'en' ? 'You just arrived at the office with your coffee.' : 'Acabás de llegar a la oficina con tu café.'}</p>
+          <p>{language === 'en' ? 'Slack:' : 'Slack:'} <span className="highlight">{language === 'en' ? '47 unread messages' : '47 mensajes sin leer'}</span></p>
+          <p>{language === 'en' ? 'Calendar:' : 'Calendario:'} <span className="highlight">{language === 'en' ? '6 back-to-back meetings' : '6 reuniones seguidas'}</span></p>
+          <p>{language === 'en' ? "Sprint ends in 3 days. You're at" : 'El sprint termina en 3 días. Estás al'} <span className="danger">{language === 'en' ? '60% completion' : '60% de completitud'}</span>.</p>
+          <p className="final">{language === 'en' ? 'Your phone vibrates. Message from the CEO.' : 'Tu teléfono vibra. Mensaje del CEO.'}</p>
         </div>
 
-        <div className="team-grid-intro">
-          {teamMembers.map(member => (
-            <div 
-              key={member.id} 
-              className={`team-card-intro ${member.status}`}
-              onClick={() => setSelectedMember(member)}
-            >
-              <img src={member.avatarUrl} alt={member.name} className="avatar-large" />
-              <div className="member-info">
-                <div className="member-name">{member.name}</div>
-                <div className="member-role">{member.role}</div>
-                <div className={`member-status status-${member.status}`}>
-                  {member.status === 'camera-off' && '🔴 Camera OFF'}
-                  {member.status === 'online' && '🟢 Online'}
-                  {member.status === 'late' && '🟡 Joined Late'}
-                </div>
-              </div>
-            </div>
-          ))}
+        <div className="rules">
+          <h3>{language === 'en' ? 'THE RULES' : 'LAS REGLAS'}</h3>
+          <ul>
+            <li>⏱️ {language === 'en' ? 'You have' : 'Tenés'} <strong>{language === 'en' ? '45 minutes' : '45 minutos'}</strong></li>
+            <li>📹 {language === 'en' ? 'Your camera and screen are' : 'Tu cámara y pantalla están'} <strong>{language === 'en' ? 'recording' : 'grabando'}</strong></li>
+            <li>🤖 {language === 'en' ? 'You can use' : 'Podés usar'} <strong>{language === 'en' ? 'any AI tool' : 'cualquier herramienta de IA'}</strong> {language === 'en' ? 'you want' : 'que quieras'}</li>
+            <li>🎯 {language === 'en' ? 'Your goal: Keep the team alive' : 'Tu objetivo: Mantener al equipo vivo'}</li>
+          </ul>
         </div>
+        {onBack && (
+  <button className="back-to-menu-btn" onClick={onBack}>
+    ← {language === 'en' ? 'Back to Menu' : 'Volver al Menú'}
+  </button>
+)}
 
-        {selectedMember && (
-          <div className="member-detail-modal" onClick={() => setSelectedMember(null)}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-              <button className="close-btn" onClick={() => setSelectedMember(null)}>×</button>
-              <img src={selectedMember.avatarUrl} alt={selectedMember.name} className="avatar-huge" />
-              <h2>{selectedMember.name}</h2>
-              <p className="role-badge">{selectedMember.role}</p>
-              <p className="member-details">{selectedMember.details}</p>
-            </div>
-          </div>
-        )}
-
-        <button className="primary-btn pulse" onClick={() => setStage('daily')}>
-          Join Daily Standup →
+        <button className="start-btn" onClick={() => setStage('daily')}>
+          {language === 'en' ? 'START ASSESSMENT' : 'INICIAR EVALUACIÓN'}
+          <span className="arrow">→</span>
         </button>
+
+        <p className="disclaimer">
+          {language === 'en' 
+            ? 'This simulation will test your real skills as a Scrum Master.\nGood luck. You\'ll need it.'
+            : 'Esta simulación pondrá a prueba tus habilidades reales como Scrum Master.\nBuena suerte. La vas a necesitar.'}
+        </p>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
  if (stage === 'daily') {
   const activeSpeaker = dialogue[currentDialogue]?.speakerId;
@@ -214,13 +449,25 @@ const jiraTickets = [
   return (
   <div className="challenge-container">
     <AssessmentHeader />
-      <div className="zoom-header">
-        <h2>⏰ 9:05 AM - Daily Standup</h2>
-        <div className="view-tabs">
-          <button 
-            className={`view-tab ${activeView === 'zoom' ? 'active' : ''}`}
-            onClick={() => setActiveView('zoom')}
-          >
+    <div className="zoom-header">
+      <h2>⏰ 9:05 AM - Daily Standup</h2>
+      
+      {/* BOTÓN DE MUTE - AGREGAR ACÁ */}
+      <button 
+        className="mute-btn"
+        onClick={() => setAudioMuted(!audioMuted)}
+        title={audioMuted ? "Unmute audio" : "Mute audio"}
+      >
+        {audioMuted ? '🔇' : '🔊'}
+      </button>
+      
+      <div className="view-tabs">
+        <button 
+          className={`view-tab ${activeView === 'zoom' ? 'active' : ''}`}
+          onClick={() => setActiveView('zoom')}
+        >
+
+
             📹 Zoom
           </button>
           <button 
@@ -286,82 +533,389 @@ const jiraTickets = [
       )}
 
       {/* SLACK VIEW */}
-      {activeView === 'slack' && (
-        <div className="slack-view">
-          <div className="slack-header">
-            <h3>#team-standup</h3>
-            <p className="channel-desc">Daily standup channel · 5 members</p>
+{activeView === 'slack' && (
+  <div className="slack-view">
+    <div className="slack-header">
+      <h3>#team-standup</h3>
+      <p className="channel-desc">Daily standup channel · 5 members</p>
+    </div>
+    <div className="slack-messages">
+      {slackMessages.map(msg => (
+        <div key={msg.id} className="slack-message">
+          <div className="msg-header">
+            <strong>{msg.user}</strong>
+            <span className="msg-time">{msg.time}</span>
           </div>
-          <div className="slack-messages">
-            {slackMessages.map(msg => (
-              <div key={msg.id} className="slack-message">
-                <div className="msg-header">
-                  <strong>{msg.user}</strong>
-                  <span className="msg-time">{msg.time}</span>
-                </div>
-                <div className="msg-text">{msg.text}</div>
-                {msg.reactions.length > 0 && (
-                  <div className="msg-reactions">
-                    {msg.reactions.map((reaction, i) => (
-                      <span key={i} className="reaction">{reaction}</span>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+          <div className="msg-text">{msg.text}</div>
+          {msg.reactions.length > 0 && (
+            <div className="msg-reactions">
+              {msg.reactions.map((reaction, i) => (
+                <span key={i} className="reaction">{reaction}</span>
+              ))}
+            </div>
+          )}
         </div>
-      )}
+      ))}
+      
+      {/* MENSAJES QUE ENVIASTE */}
+      {slackSent.map((msg, index) => (
+        <div key={`sent-${index}`} className="slack-message your-message">
+          <div className="msg-header">
+            <strong>You (Scrum Master)</strong>
+            <span className="msg-time">Just now</span>
+          </div>
+          <div className="msg-text">{msg.text}</div>
+          {msg.response && (
+            <div className="slack-message response-message">
+              <div className="msg-header">
+                <strong>{msg.response.from}</strong>
+                <span className="msg-time">{msg.response.time}</span>
+              </div>
+              <div className="msg-text">{msg.response.text}</div>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+    
+    {/* INPUT PARA ESCRIBIR */}
+    <div className="slack-input-container">
+      <textarea
+        className="slack-input"
+        placeholder="Message #team-standup..."
+        value={slackInput}
+        onChange={(e) => setSlackInput(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' && !e.shiftKey && slackInput.trim()) {
+            e.preventDefault();
+            
+            // Determinar respuesta según el mensaje
+            let response = null;
+            const lowerMsg = slackInput.toLowerCase();
+            
+            if (lowerMsg.includes('alex') || lowerMsg.includes('endpoint') || lowerMsg.includes('api')) {
+              response = {
+                from: 'Alex',
+                time: 'Just now',
+                text: 'Thanks for checking in. I think I need help with the authentication logic. Can someone pair with me?'
+              };
+              // MEJORA EL TEAM HEALTH
+              setTeamHealth(Math.min(100, teamHealth + 5));
+            } else if (lowerMsg.includes('jordan')) {
+              response = {
+                from: 'Jordan',
+                time: 'Just now',
+                text: 'Appreciate it. I can work on other tasks while we unblock this.'
+              };
+            } else if (lowerMsg.includes('everyone') || lowerMsg.includes('team')) {
+              response = {
+                from: 'Casey',
+                time: 'Just now',
+                text: '👍 Let\'s sync after this to align on priorities!'
+              };
+            }
+            
+            setSlackSent([...slackSent, { text: slackInput, response }]);
+            setSlackInput('');
+          }
+        }}
+        rows="2"
+      />
+      <div className="slack-input-footer">
+        <span className="hint-text">Press Enter to send, Shift+Enter for new line</span>
+        <button 
+          className="send-slack-btn"
+          onClick={() => {
+            if (slackInput.trim()) {
+              setSlackSent([...slackSent, { text: slackInput }]);
+              setSlackInput('');
+            }
+          }}
+        >
+          Send
+        </button>
+      </div>
+    </div>
+  </div>
+)}
 
       {/* EMAIL VIEW */}
-      {activeView === 'email' && (
-        <div className="email-view">
-          <div className="email-header">
-            <h3>Inbox</h3>
-            <p className="inbox-count">3 messages</p>
+{activeView === 'email' && (
+  <div className="email-view">
+    <div className="email-header">
+      <h3>Inbox</h3>
+      <p className="inbox-count">3 messages</p>
+    </div>
+    <div className="email-list">
+      {emails.map(email => (
+        <div 
+          key={email.id} 
+          className={`email-item ${email.unread ? 'unread' : ''}`}
+          onClick={() => setSelectedEmail(email)}
+        >
+          <div className="email-from">
+            {email.unread && <span className="unread-dot">●</span>}
+            <strong>{email.from}</strong>
+            {email.priority === 'high' && <span className="priority-badge">! High Priority</span>}
           </div>
-          <div className="email-list">
-            {emails.map(email => (
-              <div key={email.id} className={`email-item ${email.unread ? 'unread' : ''}`}>
-                <div className="email-from">
-                  {email.unread && <span className="unread-dot">●</span>}
-                  <strong>{email.from}</strong>
-                  {email.priority === 'high' && <span className="priority-badge">! High Priority</span>}
-                </div>
-                <div className="email-subject">{email.subject}</div>
-                <div className="email-preview">{email.preview}</div>
-              </div>
-            ))}
+          <div className="email-subject">{email.subject}</div>
+          <div className="email-preview">{email.preview}</div>
+        </div>
+      ))}
+    </div>
+
+    {/* MODAL DE EMAIL COMPLETO */}
+    {selectedEmail && (
+      <div className="email-modal" onClick={() => setSelectedEmail(null)}>
+        <div className="email-modal-content" onClick={(e) => e.stopPropagation()}>
+          <div className="email-modal-header">
+            <div>
+              <h3>{selectedEmail.subject}</h3>
+              <p className="email-meta">
+                From: <strong>{selectedEmail.from}</strong> · 
+                {selectedEmail.priority === 'high' && <span className="priority-badge">! High Priority</span>}
+              </p>
+            </div>
+            <button className="close-email-btn" onClick={() => setSelectedEmail(null)}>×</button>
+          </div>
+          <div className="email-modal-body">
+            {selectedEmail.id === 1 && (
+              <>
+                <p>Hi team,</p>
+                <p>I just heard from the client that the integration feature won't be ready for Friday's demo. This is a major issue.</p>
+                <p>We promised this feature would be delivered this week. The client is already frustrated with previous delays.</p>
+                <p><strong>I need a clear explanation of:</strong></p>
+                <ul>
+                  <li>What is blocking the delivery?</li>
+                  <li>What can we deliver by Friday?</li>
+                  <li>How do we prevent this in the future?</li>
+                </ul>
+                <p>Please respond by end of day.</p>
+                <p>- CEO</p>
+              </>
+            )}
+            {selectedEmail.id === 2 && (
+              <>
+                <p>Hey,</p>
+                <p>We're missing estimates for 3 critical stories that need to go into next sprint:</p>
+                <ul>
+                  <li>User authentication redesign</li>
+                  <li>Payment gateway integration</li>
+                  <li>Analytics dashboard</li>
+                </ul>
+                <p>Can we get the team to size these today? Planning is tomorrow and we can't move forward without estimates.</p>
+                <p>Thanks,<br/>Morgan</p>
+              </>
+            )}
+            {selectedEmail.id === 3 && (
+              <>
+                <p>Hi,</p>
+                <p>I'm running into some issues with the staging environment. Deployments are failing with authentication errors.</p>
+                <p>I've been trying to debug this for the past hour but getting nowhere. This is blocking my ability to test the API endpoints.</p>
+                <p>Can someone from DevOps help? Or should I try rolling back to the previous config?</p>
+                <p>- Alex</p>
+              </>
+            )}
+          </div>
+          <div className="email-modal-footer">
+            <button className="reply-btn">Reply</button>
+            <button className="forward-btn">Forward</button>
+            <button className="archive-btn">Archive</button>
           </div>
         </div>
-      )}
+      </div>
+    )}
+  </div>
+)}
 
       {/* JIRA VIEW */}
-      {activeView === 'jira' && (
-        <div className="jira-view">
-          <div className="jira-header">
-            <h3>Sprint Board</h3>
-            <p className="sprint-info">Sprint 12 · 3 days remaining</p>
-          </div>
-          <div className="jira-tickets">
-            {jiraTickets.map(ticket => (
-              <div key={ticket.id} className={`jira-ticket priority-${ticket.priority.toLowerCase()}`}>
-                <div className="ticket-header">
-                  <span className="ticket-id">{ticket.id}</span>
-                  <span className={`ticket-status status-${ticket.status.toLowerCase().replace(' ', '-')}`}>
-                    {ticket.status}
-                  </span>
-                </div>
-                <div className="ticket-title">{ticket.title}</div>
-                <div className="ticket-footer">
-                  <span className="ticket-assignee">👤 {ticket.assignee}</span>
-                  <span className="ticket-points">{ticket.storyPoints} pts</span>
-                </div>
-              </div>
-            ))}
-          </div>
+{activeView === 'jira' && (
+  <div className="jira-view">
+    <div className="jira-header">
+      <h3>Sprint Board</h3>
+      <p className="sprint-info">Sprint 12 · 3 days remaining</p>
+    </div>
+    
+    <div className="jira-board">
+      {/* TO DO COLUMN */}
+      <div 
+        className="jira-column"
+        onDragOver={(e) => e.preventDefault()}
+        onDrop={(e) => {
+          e.preventDefault();
+          if (draggedTicket && draggedTicket.fromColumn !== 'todo') {
+            const newBoard = {...jiraBoardTickets};
+            newBoard[draggedTicket.fromColumn] = newBoard[draggedTicket.fromColumn].filter(t => t.id !== draggedTicket.ticket.id);
+            newBoard.todo = [...newBoard.todo, draggedTicket.ticket];
+            setJiraBoardTickets(newBoard);
+            setDraggedTicket(null);
+          }
+        }}
+      >
+        <div className="column-header">
+          <h4>To Do</h4>
+          <span className="ticket-count">{jiraBoardTickets.todo.length}</span>
         </div>
-      )}
+        <div className="tickets-container">
+          {jiraBoardTickets.todo.map(ticket => (
+            <div
+              key={ticket.id}
+              className={`jira-ticket-card priority-${ticket.priority.toLowerCase()}`}
+              draggable
+              onDragStart={() => setDraggedTicket({ ticket, fromColumn: 'todo' })}
+            >
+              <div className="ticket-header-card">
+                <span className="ticket-id">{ticket.id}</span>
+                <span className={`ticket-priority priority-${ticket.priority.toLowerCase()}`}>
+                  {ticket.priority}
+                </span>
+              </div>
+              <div className="ticket-title-card">{ticket.title}</div>
+              <div className="ticket-footer-card">
+                <span className="ticket-assignee">👤 {ticket.assignee}</span>
+                <span className="ticket-points">{ticket.storyPoints} pts</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* IN PROGRESS COLUMN */}
+      <div 
+        className="jira-column in-progress"
+        onDragOver={(e) => e.preventDefault()}
+        onDrop={(e) => {
+          e.preventDefault();
+          if (draggedTicket && draggedTicket.fromColumn !== 'inProgress') {
+            const newBoard = {...jiraBoardTickets};
+            newBoard[draggedTicket.fromColumn] = newBoard[draggedTicket.fromColumn].filter(t => t.id !== draggedTicket.ticket.id);
+            newBoard.inProgress = [...newBoard.inProgress, draggedTicket.ticket];
+            setJiraBoardTickets(newBoard);
+            setDraggedTicket(null);
+            
+            // Si desbloqueaste a Jordan, sube el health
+            if (draggedTicket.ticket.id === 'PROJ-143' && draggedTicket.fromColumn === 'blocked') {
+              setTeamHealth(Math.min(100, teamHealth + 10));
+            }
+          }
+        }}
+      >
+        <div className="column-header">
+          <h4>In Progress</h4>
+          <span className="ticket-count">{jiraBoardTickets.inProgress.length}</span>
+        </div>
+        <div className="tickets-container">
+          {jiraBoardTickets.inProgress.map(ticket => (
+            <div
+              key={ticket.id}
+              className={`jira-ticket-card priority-${ticket.priority.toLowerCase()}`}
+              draggable
+              onDragStart={() => setDraggedTicket({ ticket, fromColumn: 'inProgress' })}
+            >
+              <div className="ticket-header-card">
+                <span className="ticket-id">{ticket.id}</span>
+                <span className={`ticket-priority priority-${ticket.priority.toLowerCase()}`}>
+                  {ticket.priority}
+                </span>
+              </div>
+              <div className="ticket-title-card">{ticket.title}</div>
+              <div className="ticket-footer-card">
+                <span className="ticket-assignee">👤 {ticket.assignee}</span>
+                <span className="ticket-points">{ticket.storyPoints} pts</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* BLOCKED COLUMN */}
+      <div 
+        className="jira-column blocked"
+        onDragOver={(e) => e.preventDefault()}
+        onDrop={(e) => {
+          e.preventDefault();
+          if (draggedTicket && draggedTicket.fromColumn !== 'blocked') {
+            const newBoard = {...jiraBoardTickets};
+            newBoard[draggedTicket.fromColumn] = newBoard[draggedTicket.fromColumn].filter(t => t.id !== draggedTicket.ticket.id);
+            newBoard.blocked = [...newBoard.blocked, draggedTicket.ticket];
+            setJiraBoardTickets(newBoard);
+            setDraggedTicket(null);
+          }
+        }}
+      >
+        <div className="column-header blocked-header">
+          <h4>⚠️ Blocked</h4>
+          <span className="ticket-count">{jiraBoardTickets.blocked.length}</span>
+        </div>
+        <div className="tickets-container">
+          {jiraBoardTickets.blocked.map(ticket => (
+            <div
+              key={ticket.id}
+              className={`jira-ticket-card priority-${ticket.priority.toLowerCase()} blocked-ticket`}
+              draggable
+              onDragStart={() => setDraggedTicket({ ticket, fromColumn: 'blocked' })}
+            >
+              <div className="ticket-header-card">
+                <span className="ticket-id">{ticket.id}</span>
+                <span className={`ticket-priority priority-${ticket.priority.toLowerCase()}`}>
+                  {ticket.priority}
+                </span>
+              </div>
+              <div className="ticket-title-card">{ticket.title}</div>
+              <div className="ticket-footer-card">
+                <span className="ticket-assignee">👤 {ticket.assignee}</span>
+                <span className="ticket-points">{ticket.storyPoints} pts</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* DONE COLUMN */}
+      <div 
+        className="jira-column done"
+        onDragOver={(e) => e.preventDefault()}
+        onDrop={(e) => {
+          e.preventDefault();
+          if (draggedTicket && draggedTicket.fromColumn !== 'done') {
+            const newBoard = {...jiraBoardTickets};
+            newBoard[draggedTicket.fromColumn] = newBoard[draggedTicket.fromColumn].filter(t => t.id !== draggedTicket.ticket.id);
+            newBoard.done = [...newBoard.done, draggedTicket.ticket];
+            setJiraBoardTickets(newBoard);
+            setDraggedTicket(null);
+          }
+        }}
+      >
+        <div className="column-header done-header">
+          <h4>✅ Done</h4>
+          <span className="ticket-count">{jiraBoardTickets.done.length}</span>
+        </div>
+        <div className="tickets-container">
+          {jiraBoardTickets.done.map(ticket => (
+            <div
+              key={ticket.id}
+              className={`jira-ticket-card priority-${ticket.priority.toLowerCase()}`}
+              draggable
+              onDragStart={() => setDraggedTicket({ ticket, fromColumn: 'done' })}
+            >
+              <div className="ticket-header-card">
+                <span className="ticket-id">{ticket.id}</span>
+                <span className={`ticket-priority priority-${ticket.priority.toLowerCase()}`}>
+                  {ticket.priority}
+                </span>
+              </div>
+              <div className="ticket-title-card">{ticket.title}</div>
+              <div className="ticket-footer-card">
+                <span className="ticket-assignee">👤 {ticket.assignee}</span>
+                <span className="ticket-points">{ticket.storyPoints} pts</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+)}
 
       {currentDialogue >= dialogue.length - 1 && (
         <button className="primary-btn" onClick={() => setStage('detection')}>
@@ -564,15 +1118,23 @@ const jiraTickets = [
         </div>
 
         <div className="priority-feedback">
-          <h3>📊 Your Prioritization:</h3>
-          <p>You chose to tackle: <strong>{priorities[0].text}</strong> first.</p>
-          {priorities[0].id === '1' && <p className="feedback-good">✅ Excellent! Unblocking dependencies is critical.</p>}
-          {priorities[0].id !== '1' && <p className="feedback-ok">🟡 Consider: Dependencies usually need immediate attention.</p>}
-        </div>
+  <h3>{t('yourPrioritization')}</h3>
+  <p>{t('youChose')} <strong>{priorities[0].text}</strong> {t('first')}</p>
+  {priorities[0].id === '1' && <p className="feedback-good">{t('feedbackGood')}</p>}
+  {priorities[0].id !== '1' && <p className="feedback-ok">{t('feedbackOk')}</p>}
+</div>
 
-        <button className="primary-btn" onClick={() => alert('Full assessment coming soon!')}>
-          Continue to Challenge 2 →
-        </button>
+{/* BOTÓN BACK TO MENU */}
+{onBack && (
+  <button className="back-to-menu-btn" onClick={onBack}>
+    ← {language === 'en' ? 'Back to Menu' : 'Volver al Menú'}
+  </button>
+)}
+
+<button className="primary-btn" onClick={() => alert('Full assessment coming soon!')}>
+  {t('continueChallenge2')}
+</button>
+
       </div>
     );
   }

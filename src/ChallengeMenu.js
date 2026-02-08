@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './ChallengeMenu.css';
 import DailyChallenge from './DailyChallenge';
+import SlackChallenge from './SlackChallenge';
 
 const ChallengeMenu = () => {
   const [language, setLanguage] = useState('en');
@@ -8,8 +9,12 @@ const ChallengeMenu = () => {
 
   // Si seleccionó un challenge, renderizarlo
   if (selectedChallenge === 1) {
-    return <DailyChallenge language={language} onBack={() => setSelectedChallenge(null)} />;
-  }
+  return <DailyChallenge language={language} onBack={() => setSelectedChallenge(null)} />;
+}
+
+if (selectedChallenge === 2) {
+  return <SlackChallenge language={language} onBack={() => setSelectedChallenge(null)} />;
+}
 
   // Menú principal
   return (
@@ -49,16 +54,16 @@ const ChallengeMenu = () => {
         </div>
 
         {/* CHALLENGE 2 */}
-        <div className="challenge-card locked">
-          <div className="challenge-number">02</div>
-          <div className="challenge-icon">💬</div>
-          <h3>Slack on Fire</h3>
-          <p className="challenge-skill">Crisis Management & Communication</p>
-          <div className="challenge-status">
-            <span className="status-badge locked">🔒 Locked</span>
-            <span className="duration">⏱️ 8 min</span>
-          </div>
-        </div>
+<div className="challenge-card available" onClick={() => setSelectedChallenge(2)}>
+  <div className="challenge-number">02</div>
+  <div className="challenge-icon">💬</div>
+  <h3>Slack on Fire</h3>
+  <p className="challenge-skill">Crisis Management & Communication</p>
+  <div className="challenge-status">
+    <span className="status-badge available">Available</span>
+    <span className="duration">⏱️ 12 min</span>
+  </div>
+</div>
 
         {/* CHALLENGE 3 */}
         <div className="challenge-card locked">

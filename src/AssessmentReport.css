@@ -787,3 +787,330 @@
     flex-direction: column;
   }
 }
+/* ============================================ */
+/* PDF/PRINT VERSION - ULTRA COMPACT */
+/* ============================================ */
+
+.candidate-info-inputs {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.candidate-input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 10px 15px;
+  color: #ffffff;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+}
+
+.candidate-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.candidate-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.report-container.pdf-mode {
+  padding: 15px;
+  max-width: 210mm;
+  margin: 0 auto;
+  font-size: 10px;
+}
+
+.report-container.pdf-mode .candidate-info-inputs {
+  display: none; /* Ocultar inputs en PDF */
+}
+
+/* Header compacto */
+.report-container.pdf-mode .report-header {
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 10px;
+  padding: 15px;
+  margin-bottom: 10px;
+}
+
+.report-container.pdf-mode .report-title {
+  font-size: 20px;
+  margin-bottom: 5px;
+}
+
+.report-container.pdf-mode .report-meta {
+  font-size: 10px;
+  gap: 8px;
+}
+
+/* Mostrar info candidato en PDF */
+.report-container.pdf-mode .report-title-section::after {
+  content: attr(data-candidate);
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #3b82f6;
+  margin-top: 5px;
+}
+
+.report-container.pdf-mode .score-circle {
+  width: 70px;
+  height: 70px;
+}
+
+.report-container.pdf-mode .score-number {
+  font-size: 28px;
+}
+
+.report-container.pdf-mode .score-label {
+  font-size: 10px;
+}
+
+.report-container.pdf-mode .recommendation-badge {
+  padding: 12px 15px;
+}
+
+.report-container.pdf-mode .rec-text {
+  font-size: 16px;
+}
+
+.report-container.pdf-mode .rec-confidence {
+  font-size: 10px;
+}
+
+/* Grid compacto */
+.report-container.pdf-mode .report-grid {
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.report-container.pdf-mode .report-card {
+  padding: 12px;
+  margin-bottom: 8px;
+}
+
+.report-container.pdf-mode h3 {
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+/* Skills ultra compacto */
+.report-container.pdf-mode .skills-grid {
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.report-container.pdf-mode .skill-card {
+  padding: 8px;
+}
+
+.report-container.pdf-mode .skill-icon {
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+.report-container.pdf-mode .skill-name {
+  font-size: 9px;
+  margin-bottom: 4px;
+}
+
+.report-container.pdf-mode .score-big {
+  font-size: 20px;
+}
+
+.report-container.pdf-mode .vs-avg {
+  font-size: 8px;
+}
+
+.report-container.pdf-mode .skill-bar-simple {
+  height: 3px;
+}
+
+/* Time stats compacto */
+.report-container.pdf-mode .time-stats {
+  gap: 8px;
+}
+
+.report-container.pdf-mode .time-stat {
+  padding: 8px;
+}
+
+.report-container.pdf-mode .stat-icon {
+  font-size: 20px;
+}
+
+.report-container.pdf-mode .stat-label {
+  font-size: 9px;
+}
+
+.report-container.pdf-mode .stat-value {
+  font-size: 16px;
+}
+
+/* Ranking compacto */
+.report-container.pdf-mode .percentile-number {
+  font-size: 24px;
+}
+
+.report-container.pdf-mode .percentile-context {
+  font-size: 10px;
+}
+
+.report-container.pdf-mode .ranking-bar {
+  height: 30px;
+}
+
+/* AI Match compacto */
+.report-container.pdf-mode .match-score {
+  font-size: 28px;
+}
+
+.report-container.pdf-mode .match-label {
+  font-size: 12px;
+}
+
+.report-container.pdf-mode .match-detail {
+  font-size: 9px;
+}
+
+.report-container.pdf-mode .trait-tag {
+  padding: 4px 8px;
+  font-size: 9px;
+}
+
+/* Flags compacto */
+.report-container.pdf-mode .highlight-item,
+.report-container.pdf-mode .improvement-item {
+  padding: 6px 8px;
+  gap: 8px;
+}
+
+.report-container.pdf-mode .highlight-icon {
+  width: 16px;
+  height: 16px;
+  font-size: 10px;
+}
+
+.report-container.pdf-mode .highlight-text {
+  font-size: 9px;
+  line-height: 1.3;
+}
+
+.report-container.pdf-mode .improvement-icon {
+  font-size: 14px;
+}
+
+/* Pattern compacto */
+.report-container.pdf-mode .pattern-badge-large {
+  font-size: 12px;
+  padding: 8px 15px;
+  margin-bottom: 8px;
+}
+
+.report-container.pdf-mode .pattern-description {
+  font-size: 9px;
+  margin-bottom: 8px;
+}
+
+.report-container.pdf-mode .pattern-description p {
+  margin: 0;
+}
+
+.report-container.pdf-mode .trait-label {
+  font-size: 9px;
+}
+
+.report-container.pdf-mode .trait-bar-compact {
+  height: 4px;
+}
+
+/* Risk factors compacto */
+.report-container.pdf-mode .risk-item {
+  padding: 8px;
+  gap: 8px;
+}
+
+.report-container.pdf-mode .risk-icon {
+  font-size: 16px;
+}
+
+.report-container.pdf-mode .risk-title {
+  font-size: 10px;
+  margin-bottom: 2px;
+}
+
+.report-container.pdf-mode .risk-score {
+  font-size: 9px;
+}
+
+/* Interview questions - SOLO LAS 2 MÁS IMPORTANTES */
+.report-container.pdf-mode .interview-questions {
+  gap: 8px;
+}
+
+.report-container.pdf-mode .interview-question {
+  padding: 8px;
+  gap: 8px;
+}
+
+.report-container.pdf-mode .interview-question:nth-child(n+3) {
+  display: none; /* Mostrar solo 2 preguntas */
+}
+
+.report-container.pdf-mode .question-number {
+  width: 20px;
+  height: 20px;
+  font-size: 11px;
+}
+
+.report-container.pdf-mode .question-text {
+  font-size: 9px;
+  line-height: 1.4;
+  margin-bottom: 3px;
+}
+
+.report-container.pdf-mode .question-reason {
+  font-size: 8px;
+}
+
+/* Chat transcript compacto */
+.report-container.pdf-mode .transcript-snippet {
+  gap: 8px;
+}
+
+.report-container.pdf-mode .snippet-label {
+  font-size: 9px;
+}
+
+.report-container.pdf-mode .chat-bubble {
+  padding: 10px;
+}
+
+.report-container.pdf-mode .chat-text {
+  font-size: 9px;
+  line-height: 1.4;
+  margin-bottom: 5px;
+}
+
+.report-container.pdf-mode .chat-meta {
+  font-size: 8px;
+}
+
+.report-container.pdf-mode .analysis-tag {
+  padding: 3px 6px;
+  font-size: 8px;
+}
+
+.report-container.pdf-mode .report-footer {
+  display: none !important;
+}
+
+/* Ocultar secciones menos críticas en PDF si es necesario */
+.report-container.pdf-mode .transcript-card {
+  display: none; /* Ocultar transcript en PDF para ahorrar espacio */
+}

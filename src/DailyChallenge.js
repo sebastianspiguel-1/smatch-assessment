@@ -1150,30 +1150,80 @@ if (showReport && reportData) {
 )}
 <button 
   className="primary-btn" 
-  onClick={() => {
+  onClick={async () => {
     // Preparar datos del reporte
-    setReportData({
-      detectionScore: detectionScore * 10,
-      communicationScore: 85,
-      prioritizationScore: priorities[0].id === '1' ? 90 : 70,
-      timeEfficiency: Math.round((timeRemaining / 300) * 100),
-      totalTime: Math.round((300 - timeRemaining) / 60),
-      greenFlags: [
-        'Detected critical blocker immediately',
-        'Prioritized team health over deadlines',
-        'Clear, empathetic communication'
-      ],
+    const detectionScoreCalc = detectionScore * 10;
+    const communicationScoreCalc = 85;
+    const prioritizationScoreCalc = priorities[0].id === '1' ? 90 : 70;
+    const timeEfficiencyCalc = Math.round((timeRemaining / 300) * 100);
+    const totalTimeCalc = Math.round((300 - timeRemaining) / 60);
+    
+    const overallScore = Math.round(
+      (detectionScoreCalc + prioritizationScoreCalc + communicationScoreCalc + timeEfficiencyCalc) / 4
+    );
+    
+    const recommendation = 
+      overallScore >= 80 ? 'STRONG HIRE' :
+      overallScore >= 70 ? 'HIRE' :
+      overallScore >= 60 ? 'MAYBE' : 'PASS';
+    
+    const greenFlags = [
+      'Detected critical blocker immediately',
+      'Prioritized team health over deadlines',
+      'Clear, empathetic communication'
+    ];
+    
+    const yellowFlags = detectedWrong.length > 0 
+      ? ['Detected false positive: ' + detectedWrong[0]] 
+      : [];
+    
+    const reportDataToSave = {
+      detectionScore: detectionScoreCalc,
+      communicationScore: communicationScoreCalc,
+      prioritizationScore: prioritizationScoreCalc,
+      timeEfficiency: timeEfficiencyCalc,
+      totalTime: totalTimeCalc,
+      greenFlags,
       redFlags: [],
-      yellowFlags: detectedWrong.length > 0 
-        ? ['Detected false positive: ' + detectedWrong[0]] 
-        : []
-    });
+      yellowFlags
+    };
+    
+    // Guardar en backend
+    try {
+      const response = await fetch('https://smatch-backend-production.up.railway.app/api/assessments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          challenge_id: 1,
+          overall_score: overallScore,
+          detection_score: detectionScoreCalc,
+          prioritization_score: prioritizationScoreCalc,
+          communication_score: communicationScoreCalc,
+          time_efficiency: timeEfficiencyCalc,
+          recommendation: recommendation,
+          green_flags: greenFlags,
+          yellow_flags: yellowFlags,
+          red_flags: [],
+          total_time: totalTimeCalc
+        })
+      });
+      
+      const data = await response.json();
+      console.log('Assessment saved:', data);
+      
+    } catch (error) {
+      console.error('Error saving assessment:', error);
+      // Continuar mostrando el reporte aunque falle el guardado
+    }
+    
+    setReportData(reportDataToSave);
     setShowReport(true);
   }}
 >
   📊 {language === 'en' ? 'View Full Report' : 'Ver Reporte Completo'}
 </button>
-
 <button className="primary-btn" onClick={() => alert('Full assessment coming soon!')}>
   {t('continueChallenge2')}
 </button>

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './DailyChallenge.css';
+import AssessmentReport from './AssessmentReport';
+
 
 const DailyChallenge = ({ language: initialLanguage, onBack }) => {
   const [stage, setStage] = useState('intro');
@@ -9,6 +11,8 @@ const DailyChallenge = ({ language: initialLanguage, onBack }) => {
   const [teamHealth, setTeamHealth] = useState(30);
   const [timeRemaining, setTimeRemaining] = useState(300);
   const [selectedMember, setSelectedMember] = useState(null);
+  const [showReport, setShowReport] = useState(false);
+  const [reportData, setReportData] = useState(null);
   const [priorities, setPriorities] = useState([
     { id: '1', text: 'Unblock Alex immediately' },
     { id: '2', text: 'Address team tension' },
@@ -426,6 +430,7 @@ const jiraTickets = [
   <button className="back-to-menu-btn" onClick={onBack}>
     ← {language === 'en' ? 'Back to Menu' : 'Volver al Menú'}
   </button>
+  
 )}
 
         <button className="start-btn" onClick={() => setStage('daily')}>
@@ -1082,6 +1087,10 @@ const jiraTickets = [
     const detectedCorrect = detectedIssues.filter(i => correctIssues.includes(i));
     const detectedWrong = detectedIssues.filter(i => !correctIssues.includes(i));
     const detectionScore = Math.round((detectedCorrect.length / correctIssues.length) * 10);
+    // Si debe mostrar el reporte
+if (showReport && reportData) {
+  return <AssessmentReport results={reportData} onBack={onBack} language={language} />;
+}
 
     return (
   <div className="challenge-container">
@@ -1130,6 +1139,31 @@ const jiraTickets = [
     ← {language === 'en' ? 'Back to Menu' : 'Volver al Menú'}
   </button>
 )}
+<button 
+  className="primary-btn" 
+  onClick={() => {
+    // Preparar datos del reporte
+    setReportData({
+      detectionScore: detectionScore * 10,
+      communicationScore: 85,
+      prioritizationScore: priorities[0].id === '1' ? 90 : 70,
+      timeEfficiency: Math.round((timeRemaining / 300) * 100),
+      totalTime: Math.round((300 - timeRemaining) / 60),
+      greenFlags: [
+        'Detected critical blocker immediately',
+        'Prioritized team health over deadlines',
+        'Clear, empathetic communication'
+      ],
+      redFlags: [],
+      yellowFlags: detectedWrong.length > 0 
+        ? ['Detected false positive: ' + detectedWrong[0]] 
+        : []
+    });
+    setShowReport(true);
+  }}
+>
+  📊 {language === 'en' ? 'View Full Report' : 'Ver Reporte Completo'}
+</button>
 
 <button className="primary-btn" onClick={() => alert('Full assessment coming soon!')}>
   {t('continueChallenge2')}

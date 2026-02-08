@@ -456,6 +456,15 @@ const jiraTickets = [
     <AssessmentHeader />
     <div className="zoom-header">
       <h2>⏰ 9:05 AM - Daily Standup</h2>
+
+      {/* SKIP BUTTON (for testing) */}
+<button 
+  className="skip-btn"
+  onClick={() => setStage('detection')}
+  title="Skip to detection (testing mode)"
+>
+  ⏭️ Skip
+</button>
       
       {/* BOTÓN DE MUTE - AGREGAR ACÁ */}
       <button 

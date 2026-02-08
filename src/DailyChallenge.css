@@ -1625,3 +1625,24 @@
   background: linear-gradient(45deg, #0066CC, #3b82f6);
   color: white;
 }
+/* SKIP BUTTON */
+.skip-btn {
+  position: fixed;
+  bottom: 100px;
+  right: 30px;
+  background: rgba(245, 158, 11, 0.2);
+  border: 2px solid #f59e0b;
+  color: #f59e0b;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.skip-btn:hover {
+  background: #f59e0b;
+  color: white;
+  transform: scale(1.05);
+}

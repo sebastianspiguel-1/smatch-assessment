@@ -6,19 +6,123 @@ import SlackChallenge from './SlackChallenge';
 const ChallengeMenu = () => {
   const [language, setLanguage] = useState('en');
   const [selectedChallenge, setSelectedChallenge] = useState(null);
+  const [showIntro, setShowIntro] = useState(true);
 
   // Si seleccionó un challenge, renderizarlo
   if (selectedChallenge === 1) {
-  return <DailyChallenge language={language} onBack={() => setSelectedChallenge(null)} />;
-}
+    return <DailyChallenge language={language} onBack={() => setSelectedChallenge(null)} />;
+  }
 
-if (selectedChallenge === 2) {
-  return <SlackChallenge language={language} onBack={() => setSelectedChallenge(null)} />;
-}
+  if (selectedChallenge === 2) {
+    return <SlackChallenge language={language} onBack={() => setSelectedChallenge(null)} />;
+  }
 
   // Menú principal
   return (
     <div className="challenge-menu">
+      {/* INTRO MODAL */}
+      {showIntro && (
+        <div className="intro-overlay">
+          <div className="intro-modal">
+            <div className="intro-header">
+              <span className="intro-icon">☕</span>
+              <h1>Lunes, 9:00 AM</h1>
+              <p className="intro-time">Tu peor día como Scrum Master está por comenzar</p>
+            </div>
+
+            <div className="intro-story">
+              <p className="intro-lead">
+                Acabás de llegar a la oficina. Tu café aún está caliente. 
+                Abrís tu laptop y tu corazón se detiene:
+              </p>
+
+              <div className="intro-alerts">
+                <div className="intro-alert critical">
+                  <span className="alert-icon">💬</span>
+                  <div>
+                    <strong>Slack:</strong> 47 mensajes sin leer
+                  </div>
+                </div>
+                <div className="intro-alert warning">
+                  <span className="alert-icon">📅</span>
+                  <div>
+                    <strong>Sprint:</strong> Termina en 3 días - 60% completado
+                  </div>
+                </div>
+                <div className="intro-alert danger">
+                  <span className="alert-icon">📧</span>
+                  <div>
+                    <strong>CEO:</strong> "Necesito hablar urgente"
+                  </div>
+                </div>
+              </div>
+
+              <div className="intro-briefing">
+                <h3>🎯 Lo que vas a enfrentar:</h3>
+                <ul>
+                  <li><strong>5 desafíos reales</strong> que todo Scrum Master teme</li>
+                  <li><strong>45 minutos</strong> de decisiones bajo presión</li>
+                  <li><strong>Tu cámara y pantalla</strong> están siendo grabadas</li>
+                  <li><strong>Cada acción cuenta</strong> - No hay respuestas correctas, solo consecuencias</li>
+                </ul>
+              </div>
+
+              <div className="intro-rules">
+                <h3>📋 Las reglas del juego:</h3>
+                <div className="rules-grid">
+                  <div className="rule-item">
+                    <span className="rule-icon">⏱️</span>
+                    <div>
+                      <strong>Tiempo real</strong>
+                      <p>Cada challenge tiene límite de tiempo</p>
+                    </div>
+                  </div>
+                  <div className="rule-item">
+                    <span className="rule-icon">🤖</span>
+                    <div>
+                      <strong>IA permitida</strong>
+                      <p>Usá todas las herramientas que quieras</p>
+                    </div>
+                  </div>
+                  <div className="rule-item">
+                    <span className="rule-icon">📊</span>
+                    <div>
+                      <strong>Medimos todo</strong>
+                      <p>Velocidad, priorización, comunicación</p>
+                    </div>
+                  </div>
+                  <div className="rule-item">
+                    <span className="rule-icon">🎭</span>
+                    <div>
+                      <strong>Sin ensayo</strong>
+                      <p>Tu primer intento es el que cuenta</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="intro-warning">
+                <span className="warning-icon">⚠️</span>
+                <p>
+                  <strong>Advertencia:</strong> Esta simulación está diseñada para estresarte. 
+                  Vas a sentir presión real. Ese es el punto.
+                </p>
+              </div>
+            </div>
+
+            <div className="intro-footer">
+              <button className="btn-start-assessment" onClick={() => setShowIntro(false)}>
+                ☕ Tomar un sorbo de café y empezar
+                <span className="btn-arrow">→</span>
+              </button>
+              <p className="intro-disclaimer">
+                Al continuar, aceptás que tu performance será evaluada y grabada
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+      
       <div className="menu-header">
         <h1 className="menu-title">Your Worst Day as a Scrum Master</h1>
         <p className="menu-subtitle">Complete 5 challenges. Each one tests different critical skills.</p>
@@ -54,16 +158,16 @@ if (selectedChallenge === 2) {
         </div>
 
         {/* CHALLENGE 2 */}
-<div className="challenge-card available" onClick={() => setSelectedChallenge(2)}>
-  <div className="challenge-number">02</div>
-  <div className="challenge-icon">💬</div>
-  <h3>Slack on Fire</h3>
-  <p className="challenge-skill">Crisis Management & Communication</p>
-  <div className="challenge-status">
-    <span className="status-badge available">Available</span>
-    <span className="duration">⏱️ 12 min</span>
-  </div>
-</div>
+        <div className="challenge-card available" onClick={() => setSelectedChallenge(2)}>
+          <div className="challenge-number">02</div>
+          <div className="challenge-icon">💬</div>
+          <h3>Slack on Fire</h3>
+          <p className="challenge-skill">Crisis Management & Communication</p>
+          <div className="challenge-status">
+            <span className="status-badge available">Available</span>
+            <span className="duration">⏱️ 12 min</span>
+          </div>
+        </div>
 
         {/* CHALLENGE 3 */}
         <div className="challenge-card locked">

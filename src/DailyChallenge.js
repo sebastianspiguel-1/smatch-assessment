@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './DailyChallenge.css';
 import AssessmentReport from './AssessmentReport';
+import AIAssistant from './AIAssistant';
+
 
 
 const DailyChallenge = ({ language: initialLanguage, onBack }) => {
@@ -24,7 +26,8 @@ const DailyChallenge = ({ language: initialLanguage, onBack }) => {
   const [slackSent, setSlackSent] = useState([]);
   const [selectedEmail, setSelectedEmail] = useState(null);
   const [audioMuted, setAudioMuted] = useState(false);
-const [language, setLanguage] = useState(initialLanguage || 'en');
+  const [language, setLanguage] = useState(initialLanguage || 'en');
+  const [showAIAssistant, setShowAIAssistant] = useState(false);
   const [jiraBoardTickets, setJiraBoardTickets] = useState({
   todo: [
     { id: 'PROJ-144', title: 'QA testing for new feature', assignee: 'Sam', priority: 'Medium', storyPoints: 3 }
@@ -40,6 +43,8 @@ const [language, setLanguage] = useState(initialLanguage || 'en');
   ]
 });
 const [draggedTicket, setDraggedTicket] = useState(null);
+
+
 // Translations
 const translations = {
   en: {
@@ -456,6 +461,21 @@ const jiraTickets = [
     <AssessmentHeader />
     <div className="zoom-header">
       <h2>⏰ 9:05 AM - Daily Standup</h2>
+      {/* AI Assistant Button */}
+  <button 
+    className="ai-assistant-btn-fixed"
+    onClick={() => setShowAIAssistant(true)}
+  >
+    🤖 AI Assistant
+  </button>
+
+<button 
+  className="ai-assistant-btn-fixed"
+  onClick={() => setShowAIAssistant(true)}
+  title="Get AI coaching"
+>
+  🤖 AI Assistant
+</button>
 
       {/* SKIP BUTTON (for testing) */}
 <button 
@@ -1142,95 +1162,102 @@ if (showReport && reportData) {
   {priorities[0].id !== '1' && <p className="feedback-ok">{t('feedbackOk')}</p>}
 </div>
 
-{/* BOTÓN BACK TO MENU */}
-{onBack && (
-  <button className="back-to-menu-btn" onClick={onBack}>
-    ← {language === 'en' ? 'Back to Menu' : 'Volver al Menú'}
+{/* BOTONES DE NAVEGACIÓN */}
+<div className="result-actions">
+  {onBack && (
+    <button className="back-to-menu-btn-secondary" onClick={onBack}>
+      ← {language === 'en' ? 'Back to Menu' : 'Volver al Menú'}
+    </button>
+  )}
+  
+  <button 
+    className="primary-btn-large" 
+    onClick={async () => {
+      // Preparar datos del reporte
+      const detectionScoreCalc = detectionScore * 10;
+      const communicationScoreCalc = 85;
+      const prioritizationScoreCalc = priorities[0].id === '1' ? 90 : 70;
+      const timeEfficiencyCalc = Math.round((timeRemaining / 300) * 100);
+      const totalTimeCalc = Math.round((300 - timeRemaining) / 60);
+      
+      // Guardar resultados de Challenge 1 en localStorage para el reporte final
+      const challenge1Results = {
+        detectionScore: detectionScoreCalc,
+        prioritizationScore: prioritizationScoreCalc,
+        communicationScore: communicationScoreCalc,
+        timeEfficiency: timeEfficiencyCalc,
+        totalTime: totalTimeCalc,
+        completedAt: new Date().toISOString()
+      };
+      
+      localStorage.setItem('smatch_challenge1_results', JSON.stringify(challenge1Results));
+      
+      // Guardar en backend (sin bloquear el flujo)
+      try {
+        const overallScore = Math.round(
+          (detectionScoreCalc + prioritizationScoreCalc + communicationScoreCalc + timeEfficiencyCalc) / 4
+        );
+        
+        const recommendation = 
+          overallScore >= 80 ? 'STRONG HIRE' :
+          overallScore >= 70 ? 'HIRE' :
+          overallScore >= 60 ? 'MAYBE' : 'PASS';
+        
+        const greenFlags = [
+          'Detected critical blocker immediately',
+          'Prioritized team health over deadlines',
+          'Clear, empathetic communication'
+        ];
+        
+        const yellowFlags = detectedWrong.length > 0 
+          ? ['Detected false positive: ' + detectedWrong[0]] 
+          : [];
+        
+        await fetch('https://smatch-backend-production.up.railway.app/api/assessments', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            challenge_id: 1,
+            overall_score: overallScore,
+            detection_score: detectionScoreCalc,
+            prioritization_score: prioritizationScoreCalc,
+            communication_score: communicationScoreCalc,
+            time_efficiency: timeEfficiencyCalc,
+            recommendation: recommendation,
+            green_flags: greenFlags,
+            yellow_flags: yellowFlags,
+            red_flags: [],
+            total_time: totalTimeCalc
+          })
+        });
+        
+        console.log('✅ Challenge 1 results saved');
+        
+      } catch (error) {
+        console.error('Error saving assessment:', error);
+      }
+      
+      // Volver al menú para que seleccione Challenge 2
+      if (onBack) {
+        onBack();
+      }
+    }}
+  >
+    {language === 'en' ? '✅ Continue to Challenge 2 →' : '✅ Continuar al Desafío 2 →'}
   </button>
-)}
-<button 
-  className="primary-btn" 
-  onClick={async () => {
-    // Preparar datos del reporte
-    const detectionScoreCalc = detectionScore * 10;
-    const communicationScoreCalc = 85;
-    const prioritizationScoreCalc = priorities[0].id === '1' ? 90 : 70;
-    const timeEfficiencyCalc = Math.round((timeRemaining / 300) * 100);
-    const totalTimeCalc = Math.round((300 - timeRemaining) / 60);
-    
-    const overallScore = Math.round(
-      (detectionScoreCalc + prioritizationScoreCalc + communicationScoreCalc + timeEfficiencyCalc) / 4
-    );
-    
-    const recommendation = 
-      overallScore >= 80 ? 'STRONG HIRE' :
-      overallScore >= 70 ? 'HIRE' :
-      overallScore >= 60 ? 'MAYBE' : 'PASS';
-    
-    const greenFlags = [
-      'Detected critical blocker immediately',
-      'Prioritized team health over deadlines',
-      'Clear, empathetic communication'
-    ];
-    
-    const yellowFlags = detectedWrong.length > 0 
-      ? ['Detected false positive: ' + detectedWrong[0]] 
-      : [];
-    
-    const reportDataToSave = {
-      detectionScore: detectionScoreCalc,
-      communicationScore: communicationScoreCalc,
-      prioritizationScore: prioritizationScoreCalc,
-      timeEfficiency: timeEfficiencyCalc,
-      totalTime: totalTimeCalc,
-      greenFlags,
-      redFlags: [],
-      yellowFlags
-    };
-    
-    // Guardar en backend
-    try {
-      const response = await fetch('https://smatch-backend-production.up.railway.app/api/assessments', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          challenge_id: 1,
-          overall_score: overallScore,
-          detection_score: detectionScoreCalc,
-          prioritization_score: prioritizationScoreCalc,
-          communication_score: communicationScoreCalc,
-          time_efficiency: timeEfficiencyCalc,
-          recommendation: recommendation,
-          green_flags: greenFlags,
-          yellow_flags: yellowFlags,
-          red_flags: [],
-          total_time: totalTimeCalc
-        })
-      });
-      
-      const data = await response.json();
-      console.log('Assessment saved:', data);
-      
-    } catch (error) {
-      console.error('Error saving assessment:', error);
-      // Continuar mostrando el reporte aunque falle el guardado
-    }
-    
-    setReportData(reportDataToSave);
-    setShowReport(true);
-  }}
->
-  📊 {language === 'en' ? 'View Full Report' : 'Ver Reporte Completo'}
-</button>
-<button className="primary-btn" onClick={() => alert('Full assessment coming soon!')}>
-  {t('continueChallenge2')}
-</button>
+</div>
 
       </div>
     );
   }
+  {/* AI Assistant Modal */}
+  <AIAssistant 
+    isOpen={showAIAssistant} 
+    onClose={() => setShowAIAssistant(false)}
+    challenge={1}
+  />
 
   return null;
 };

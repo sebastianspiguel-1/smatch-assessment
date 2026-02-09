@@ -1628,7 +1628,7 @@
 /* SKIP BUTTON */
 .skip-btn {
   position: fixed;
-  bottom: 100px;
+  bottom: 150px;
   right: 30px;
   background: rgba(245, 158, 11, 0.2);
   border: 2px solid #f59e0b;
@@ -2049,4 +2049,86 @@
 
 .intro-modal::-webkit-scrollbar-thumb:hover {
   background: rgba(59, 130, 246, 0.7);
+}
+/* Result Actions Buttons */
+.result-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 3rem;
+  padding: 2rem 0;
+}
+
+.back-to-menu-btn-secondary {
+  padding: 1rem 2rem;
+  background: transparent;
+  color: #6b7280;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.back-to-menu-btn-secondary:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+  background: rgba(59, 130, 246, 0.05);
+}
+
+.primary-btn-large {
+  padding: 1.5rem 3rem;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+}
+
+.primary-btn-large:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 40px rgba(16, 185, 129, 0.4);
+  background: linear-gradient(135deg, #059669, #047857);
+}
+
+@media (max-width: 768px) {
+  .result-actions {
+    flex-direction: column;
+  }
+  
+  .primary-btn-large {
+    width: 100%;
+  }
+  
+  .back-to-menu-btn-secondary {
+    width: 100%;
+  }
+}
+
+/* AI Assistant Fixed Button */
+.ai-assistant-btn-fixed {
+  position: fixed;
+  bottom: 30px;
+  left: 30px;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  border: none;
+  padding: 1rem 1.5rem;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
+  z-index: 1000;
+  transition: all 0.3s;
+}
+
+.ai-assistant-btn-fixed:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 40px rgba(59, 130, 246, 0.5);
 }

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import './ChallengeMenu.css';
 import DailyChallenge from './DailyChallenge';
 import SlackChallenge from './SlackChallenge';
+import RetroChallenge from './RetroChallenge';
+
 
 const ChallengeMenu = () => {
   const [language, setLanguage] = useState('en');
@@ -16,6 +18,9 @@ const ChallengeMenu = () => {
   if (selectedChallenge === 2) {
     return <SlackChallenge language={language} onBack={() => setSelectedChallenge(null)} />;
   }
+  if (selectedChallenge === 3) {
+  return <RetroChallenge language={language} onBack={() => setSelectedChallenge(null)} />;
+}
 
   // Menú principal
   return (
@@ -195,16 +200,16 @@ const ChallengeMenu = () => {
         </div>
 
         {/* CHALLENGE 5 */}
-        <div className="challenge-card locked">
-          <div className="challenge-number">05</div>
-          <div className="challenge-icon">🔄</div>
-          <h3>The Retro That Doesn't Work</h3>
-          <p className="challenge-skill">Process Improvement & Facilitation</p>
-          <div className="challenge-status">
-            <span className="status-badge locked">🔒 Locked</span>
-            <span className="duration">⏱️ 15 min</span>
-          </div>
-        </div>
+        <div className="challenge-card available" onClick={() => setSelectedChallenge(3)}>
+  <div className="challenge-number">03</div>
+  <div className="challenge-icon">🔄</div>
+  <h3>The Retro That Doesn't Work</h3>
+  <p className="challenge-skill">Facilitation & Root Cause Analysis</p>
+  <div className="challenge-status">
+    <span className="status-badge available">Available</span>
+    <span className="duration">⏱️ 15 min</span>
+  </div>
+</div>
       </div>
 
       <div className="menu-footer">

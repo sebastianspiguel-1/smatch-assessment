@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './DailyChallenge.css';
 import AssessmentReport from './AssessmentReport';
-import AIAssistant from './AIAssistant';
-
+import AIChatbot from './AIChatbot';
 
 
 const DailyChallenge = ({ language: initialLanguage, onBack }) => {
@@ -15,12 +14,7 @@ const DailyChallenge = ({ language: initialLanguage, onBack }) => {
   const [selectedMember, setSelectedMember] = useState(null);
   const [showReport, setShowReport] = useState(false);
   const [reportData, setReportData] = useState(null);
-  const [priorities, setPriorities] = useState([
-    { id: '1', text: 'Unblock Alex immediately' },
-    { id: '2', text: 'Address team tension' },
-    { id: '3', text: 'Sync with PO on priorities' },
-    { id: '4', text: 'Check in with Sam (QA)' },
-  ]);
+  const [priorities, setPriorities] = useState([]);
   const [activeView, setActiveView] = useState('zoom');
   const [slackInput, setSlackInput] = useState('');
   const [slackSent, setSlackSent] = useState([]);
@@ -43,13 +37,15 @@ const DailyChallenge = ({ language: initialLanguage, onBack }) => {
   ]
 });
 const [draggedTicket, setDraggedTicket] = useState(null);
+const [priorityNote, setPriorityNote] = useState('');
+
 
 
 // Translations
 const translations = {
   en: {
     // INTRO
-    introTitle1: "YOUR WORST DAY",
+    introTitle1: "A NORMAL",
     introTitle2: "AS A SCRUM MASTER",
     introTime: "Monday, 9:00 AM",
     introStory1: "You just arrived at the office with your coffee.",
@@ -129,8 +125,8 @@ const translations = {
     // INTRO
     introTitle1: "TU PEOR DÍA",
     introTitle2: "COMO SCRUM MASTER",
-    introTime: "Lunes, 9:00 AM",
-    introStory1: "Acabás de llegar a la oficina con tu café.",
+    introTime: "Es Lunes a las 9:00 AM",
+    introStory1: "Empezas el dia con un cafe en la mano (todavía demasiado caliente como para tomarlo rápido). Esta semana tiene varios desafios... El fin de sprint en tres días. El tablero está en amarillo tirando a rojo, pero nada explotó… todavía. Abrís la notebook.   cabás de llegar a la oficina con tu café.",
     introStory2Slack: "Slack:",
     introStory2Messages: "47 mensajes sin leer",
     introStory3Calendar: "Calendario:",
@@ -259,13 +255,12 @@ const t = (key) => translations[language][key] || key;
 ];
 
   const dialogue = [
-    { speaker: 'You', speakerId: 0, text: 'Good morning team! Let\'s start the daily. Alex, how are things going?', emotion: 'neutral' },
+    { speaker: 'You', speakerId: 0, text: 'Good morning team! Let\\s start the daily. Alex how are things going?', emotion: 'neutral' },
     { speaker: 'Alex', speakerId: 1, text: 'Yeah, uh... good. Working on the API endpoints. Should be done soon.', emotion: 'evasive' },
     { speaker: 'Jordan', speakerId: 2, text: 'Wait, Alex are you almost done? Because I need those endpoints to finish the integration and—', emotion: 'impatient' },
     { speaker: 'You', speakerId: 0, text: 'Jordan, let Alex finish please.', emotion: 'calm' },
     { speaker: 'Alex', speakerId: 1, text: 'Yeah... almost. Just a few more things.', emotion: 'vague' },
     { speaker: 'Jordan', speakerId: 2, text: 'Okay but "soon" could mean today or next week, I need to know because—', emotion: 'frustrated' },
-    { speaker: 'Sam', speakerId: 3, text: '...', emotion: 'silent' },
     { speaker: 'Casey', speakerId: 4, text: 'I finished the mockups yesterday! Uploaded to Figma. Jordan, let me know if you need anything!', emotion: 'positive' },
     { speaker: 'Morgan', speakerId: 5, text: 'Sorry I\'m late, what did I miss?', emotion: 'distracted' },
   ];
@@ -457,6 +452,7 @@ const jiraTickets = [
   const activeSpeaker = dialogue[currentDialogue]?.speakerId;
 
   return (
+    <>
   <div className="challenge-container">
     <AssessmentHeader />
     <div className="zoom-header">
@@ -968,7 +964,13 @@ const jiraTickets = [
           </div>
         </div>
       )}
-    </div>
+      </div>
+    <AIChatbot 
+      isOpen={showAIAssistant} 
+      onClose={() => setShowAIAssistant(false)}
+      challenge={1}
+    />
+  </>
   );
 }
 
@@ -983,13 +985,21 @@ const jiraTickets = [
 
         <div className="issues-interactive">
           {[
-            { id: 'alex-blocked', label: '🚧 Alex is blocked but not saying it', correct: true },
-            { id: 'jordan-impatient', label: '😤 Jordan is frustrated and interrupting', correct: true },
-            { id: 'sam-silent', label: '🤐 Sam (QA) is disengaged/unhappy', correct: true },
-            { id: 'morgan-distracted', label: '📱 Morgan (PO) is distracted', correct: true },
-            { id: 'dependency', label: '🔗 Dependency blocker (Jordan waiting for Alex)', correct: true },
-            { id: 'tension', label: '⚡ Tension building between team members', correct: true },
-            { id: 'casey-problem', label: '❌ Casey has a problem (TRAP - this is wrong)', correct: false },
+            { id: 'alex-blocked', label: '🚧 Alex is blocked but not asking for help', correct: true },
+{ id: 'sam-silent', label: '🤐 Sam (QA) seems disengaged and unhappy', correct: true },
+{ id: 'morgan-distracted', label: '📱 Morgan (PO) joined late and is distracted', correct: true },
+{ id: 'alex-done', label: '❌ Alex will finish the API today', correct: false },
+{ id: 'dependency', label: '🔗 Jordan is blocked waiting for Alex', correct: true },
+{ id: 'no-eta', label: '📅 No clear ETA was given for blocked work', correct: true },
+{ id: 'camera-off', label: '📷 Alex has camera off which may signal discomfort', correct: true },
+{ id: 'casey-problem', label: '❌ Casey seems to have a blocker too', correct: false },
+{ id: 'jordan-lazy', label: '❌ Jordan is being lazy and not doing their job', correct: false },
+{ id: 'team-morale-fine', label: '❌ Team morale looks generally fine', correct: false },
+{ id: 'jordan-impatient', label: '😤 Jordan is frustrated and interrupting others', correct: true },
+{ id: 'morgan-checked-in', label: '❌ Morgan was fully up to date with sprint status', correct: false },
+{ id: 'tension', label: '⚡ There is growing tension between team members', correct: true },
+{ id: 'po-missing-context', label: '📋 PO missed part of the standup and key context', correct: true },
+{ id: 'sprint-on-track', label: '❌ The sprint is on track to be completed on time', correct: false },
           ].map(issue => (
             <button
               key={issue.id}
@@ -1011,19 +1021,40 @@ const jiraTickets = [
   className="primary-btn" 
   onClick={() => {
     // Calcular cambio en Team Health
-    const correctIssues = ['alex-blocked', 'jordan-impatient', 'sam-silent', 'dependency', 'tension', 'morgan-distracted'];
+    const correctIssues = ['alex-blocked', 'jordan-impatient', 'sam-silent', 'dependency', 'tension', 'morgan-distracted', 'no-eta', 'camera-off', 'po-missing-context'];
     const detectedCorrect = detectedIssues.filter(i => correctIssues.includes(i));
     const detectedWrong = detectedIssues.filter(i => !correctIssues.includes(i));
     const missed = correctIssues.filter(i => !detectedIssues.includes(i));
-    
+
+    // Team health sube/baja
     let healthChange = 0;
-    healthChange += detectedCorrect.length * 10; // +10% por cada correcto
-    healthChange -= detectedWrong.length * 10;   // -10% por cada falso positivo
-    healthChange -= missed.length * 5;           // -5% por cada que te perdiste
-    
+    healthChange += detectedCorrect.length * 8;
+    healthChange -= detectedWrong.length * 15;
+    healthChange -= missed.length * 5;
     const newHealth = Math.max(0, Math.min(100, teamHealth + healthChange));
     setTeamHealth(newHealth);
-    
+
+    // Mapeo de issues a acciones concretas
+    const issueToAction = {
+      'alex-blocked': '🚧 Unblock Alex - find out what\'s stuck',
+      'jordan-impatient': '😤 Address Jordan\'s frustration privately',
+      'sam-silent': '🤐 Check in with Sam 1-on-1 after standup',
+      'dependency': '🔗 Resolve Alex → Jordan dependency blocker',
+      'tension': '⚡ Defuse team tension before it escalates',
+      'morgan-distracted': '📱 Sync with Morgan (PO) on priorities',
+      'no-eta': '📅 Get a clear ETA from Alex',
+      'camera-off': '📷 Reach out to Alex privately (camera off = red flag)',
+      'po-missing-context': '📋 Brief Morgan on what she missed',
+    };
+
+    // Solo mostrar acciones para issues CORRECTOS que detectó
+    const dynamicPriorities = detectedCorrect.map((issue, index) => ({
+      id: String(index + 1),
+      issueId: issue,
+      text: issueToAction[issue] || issue
+    }));
+
+    setPriorities(dynamicPriorities);
     setStage('priority');
   }}
   disabled={detectedIssues.length === 0}
@@ -1035,46 +1066,66 @@ const jiraTickets = [
   }
 
   if (stage === 'priority') {
-    return (
-  <div className="challenge-container">
-    <AssessmentHeader />
-    <div className="priority-header">
-          <h2>📊 Prioritize Your Actions</h2>
-          <p className="timer-large">⏱️ {formatTime(timeRemaining)} remaining</p>
-          <p className="hint">Use arrows to reorder - what do you tackle FIRST?</p>
-        </div>
-
-        <div className="priority-list">
-          {priorities.map((item, index) => (
-            <div key={item.id} className="priority-item">
-              <span className="priority-number">#{index + 1}</span>
-              <span className="priority-text">{item.text}</span>
-              <div className="priority-controls">
-                <button 
-                  onClick={() => movePriority(index, 'up')}
-                  disabled={index === 0}
-                  className="arrow-btn"
-                >
-                  ▲
-                </button>
-                <button 
-                  onClick={() => movePriority(index, 'down')}
-                  disabled={index === priorities.length - 1}
-                  className="arrow-btn"
-                >
-                  ▼
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <button className="primary-btn" onClick={() => setStage('action')}>
-          Confirm Priorities →
-        </button>
+  return (
+    <div className="challenge-container">
+      <AssessmentHeader />
+      <div className="priority-header">
+        <h2>📊 Prioritize Your Actions</h2>
+        <p className="hint">Drag and drop to reorder - what do you tackle FIRST?</p>
       </div>
-    );
-  }
+
+      <div className="priority-list">
+        {priorities.map((item, index) => (
+          <div
+            key={item.id}
+            className="priority-item"
+            draggable
+            onDragStart={(e) => e.dataTransfer.setData('text/plain', index)}
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={(e) => {
+              e.preventDefault();
+              const fromIndex = parseInt(e.dataTransfer.getData('text/plain'));
+              const toIndex = index;
+              if (fromIndex === toIndex) return;
+              const newPriorities = [...priorities];
+              const [moved] = newPriorities.splice(fromIndex, 1);
+              newPriorities.splice(toIndex, 0, moved);
+              setPriorities(newPriorities);
+            }}
+          >
+            <span className="drag-handle">⠿</span>
+            <span className="priority-number">#{index + 1}</span>
+            <span className="priority-text">{item.text}</span>
+          </div>
+        ))}
+      </div>
+
+      <div className="priority-action-box">
+        <h3>💬 What would you do first and why?</h3>
+        <p className="hint">Write 2-3 sentences about your approach</p>
+        <textarea
+          className="action-textarea"
+          placeholder="e.g. I would immediately reach out to Alex privately to understand what's blocking him, then coordinate with Jordan to manage expectations..."
+          value={priorityNote}
+          onChange={(e) => setPriorityNote(e.target.value)}
+          rows={4}
+        />
+        <div className="char-count">{priorityNote.length}/500</div>
+      </div>
+
+      <button 
+        className="primary-btn"
+        onClick={() => setStage('action')}
+        disabled={priorityNote.length < 20}
+      >
+        Confirm Priorities →
+      </button>
+      {priorityNote.length < 20 && priorityNote.length > 0 && (
+        <p className="hint-warning">⚠️ Please write at least a few sentences</p>
+      )}
+    </div>
+  );
+}
 
   if (stage === 'action') {
     return (
@@ -1252,14 +1303,8 @@ if (showReport && reportData) {
       </div>
     );
   }
-  {/* AI Assistant Modal */}
-  <AIAssistant 
-    isOpen={showAIAssistant} 
-    onClose={() => setShowAIAssistant(false)}
-    challenge={1}
-  />
+    return null;
 
-  return null;
 };
 
 export default DailyChallenge;

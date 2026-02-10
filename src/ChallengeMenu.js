@@ -26,33 +26,35 @@ const ChallengeMenu = () => {
           <div className="intro-modal">
             <div className="intro-header">
               <span className="intro-icon">☕</span>
-              <h1>Lunes, 9:00 AM</h1>
-              <p className="intro-time">Tu peor día como Scrum Master está por comenzar</p>
+              <h1>Lunes 9:00 AM</h1>
+              <p className="intro-time"></p>
             </div>
 
             <div className="intro-story">
               <p className="intro-lead">
-                Acabás de llegar a la oficina. Tu café aún está caliente. 
-                Abrís tu laptop y tu corazón se detiene:
+            
+                Esta semana viene cargada de desafios para el Scrum Team... El fin del sprint 17 es en tres días. 
+                El tablero está en amarillo tirando a rojo, pero nada explotó… todavía. Abrís la notebook y 
+                te encontras con notificaciones, mensajes y mails para chequear... pero ya esta por empezar la daily, la primera de la semana.
               </p>
 
               <div className="intro-alerts">
                 <div className="intro-alert critical">
                   <span className="alert-icon">💬</span>
                   <div>
-                    <strong>Slack:</strong> 47 mensajes sin leer
+                    <strong>Slack</strong> 5 mensajes sin leer
                   </div>
                 </div>
                 <div className="intro-alert warning">
                   <span className="alert-icon">📅</span>
                   <div>
-                    <strong>Sprint:</strong> Termina en 3 días - 60% completado
+                    <strong>Sprint</strong> Termina en 3 días - 60% completado
                   </div>
                 </div>
                 <div className="intro-alert danger">
                   <span className="alert-icon">📧</span>
                   <div>
-                    <strong>CEO:</strong> "Necesito hablar urgente"
+                    <strong>Mails</strong> 10 sin leer
                   </div>
                 </div>
               </div>
@@ -60,15 +62,15 @@ const ChallengeMenu = () => {
               <div className="intro-briefing">
                 <h3>🎯 Lo que vas a enfrentar:</h3>
                 <ul>
-                  <li><strong>5 desafíos reales</strong> que todo Scrum Master teme</li>
-                  <li><strong>45 minutos</strong> de decisiones bajo presión</li>
+                  <li><strong>5 desafíos reales</strong> que todo Scrum Master vivio</li>
+                  <li><strong>60 minutos</strong> de decisiones bajo presión</li>
                   <li><strong>Tu cámara y pantalla</strong> están siendo grabadas</li>
-                  <li><strong>Cada acción cuenta</strong> - No hay respuestas correctas, solo consecuencias</li>
+                  <li><strong>Cada acción cuenta</strong> - No hay respuestas correctas</li>
                 </ul>
               </div>
 
               <div className="intro-rules">
-                <h3>📋 Las reglas del juego:</h3>
+                <h3>📋 A tener en cuenta:</h3>
                 <div className="rules-grid">
                   <div className="rule-item">
                     <span className="rule-icon">⏱️</span>
@@ -81,7 +83,7 @@ const ChallengeMenu = () => {
                     <span className="rule-icon">🤖</span>
                     <div>
                       <strong>IA permitida</strong>
-                      <p>Usá todas las herramientas que quieras</p>
+                      <p>Usá todas las herramientas que quieras, es muy valorado</p>
                     </div>
                   </div>
                   <div className="rule-item">
@@ -95,7 +97,7 @@ const ChallengeMenu = () => {
                     <span className="rule-icon">🎭</span>
                     <div>
                       <strong>Sin ensayo</strong>
-                      <p>Tu primer intento es el que cuenta</p>
+                      <p>Tu primer intento es el que cuenta, como en un sprint</p>
                     </div>
                   </div>
                 </div>
@@ -104,8 +106,7 @@ const ChallengeMenu = () => {
               <div className="intro-warning">
                 <span className="warning-icon">⚠️</span>
                 <p>
-                  <strong>Advertencia:</strong> Esta simulación está diseñada para estresarte. 
-                  Vas a sentir presión real. Ese es el punto.
+                  <strong></strong> Esta simulación puede generar estres y presion real... esa es la idea.
                 </p>
               </div>
             </div>
@@ -124,8 +125,8 @@ const ChallengeMenu = () => {
       )}
       
       <div className="menu-header">
-        <h1 className="menu-title">Your Worst Day as a Scrum Master</h1>
-        <p className="menu-subtitle">Complete 5 challenges. Each one tests different critical skills.</p>
+        <h1 className="menu-title">A complete Sprint as a Scrum Master</h1>
+        <p className="menu-subtitle">5 challenges. Each one tests different critical skills. Good Luck!</p>
         
         {/* LANGUAGE SELECTOR */}
         <div className="language-selector">

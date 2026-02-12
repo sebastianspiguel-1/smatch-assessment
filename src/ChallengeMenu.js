@@ -23,7 +23,8 @@ const ChallengeMenu = () => {
 }
 
   // Menú principal
-  return (
+return (
+  <div className="menu-scope">
     <div className="challenge-menu">
       {/* INTRO MODAL */}
       {showIntro && (
@@ -220,6 +221,7 @@ const ChallengeMenu = () => {
           <span>Progress: 0/5 challenges completed</span>
         </div>
       </div>
+    </div>
     </div>
   );
 };

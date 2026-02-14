@@ -1,57 +1,120 @@
-/* ============================================ */
-/* SLACK CHALLENGE */
-/* ============================================ */
+/* ============================================
+   SLACK CHALLENGE - LIGHT MODE DESIGN SYSTEM
+   Premium light Slack-inspired interface
+   ============================================ */
 
-/* Intro Screen */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Typography */
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  /* Backgrounds - Light & Airy */
+  --bg-deep: #ffffff;
+  --surface: #f8f9fa;
+  --elevated: #ffffff;
+  --slack-purple: #6b46c1;
+  --slack-purple-light: #f3f0ff;
+
+  /* Accent & Status */
+  --accent: #3b82f6;
+  --success: #10b981;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+
+  /* Text */
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+
+  /* Borders */
+  --border-subtle: rgba(15, 23, 42, 0.08);
+  --border-strong: rgba(15, 23, 42, 0.12);
+
+  /* Motion */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --t: 0.3s var(--ease);
+
+  /* Shadows */
+  --shadow-card: 0 4px 20px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.04);
+  --shadow-glow: 0 8px 30px rgba(59, 130, 246, 0.15);
+}
+
+/* ============================================
+   INTRO SCREEN
+   ============================================ */
+
 .slack-intro {
   min-height: 100vh;
-  background: linear-gradient(135deg, #0f1419 0%, #1a1a2e 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 40px;
+  position: relative;
+}
+
+.slack-intro::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(600px 400px at 50% 0%, rgba(59, 130, 246, 0.05), transparent 70%),
+    radial-gradient(500px 300px at 80% 100%, rgba(239, 68, 68, 0.03), transparent 70%);
+  pointer-events: none;
 }
 
 .slack-intro-content {
   max-width: 800px;
-  text-align: center;
+  position: relative;
+  z-index: 1;
 }
 
 .slack-intro-title {
   font-size: 48px;
   font-weight: 900;
-  background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin-bottom: 40px;
+  text-align: center;
+  letter-spacing: -0.02em;
 }
 
 .slack-intro-scenario {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--elevated);
+  border: 1px solid var(--border-strong);
   border-radius: 20px;
   padding: 40px;
   margin-bottom: 40px;
+  box-shadow: var(--shadow-card);
 }
 
 .slack-intro-time {
   font-size: 18px;
-  color: #3b82f6;
+  color: var(--accent);
   font-weight: 700;
   margin-bottom: 20px;
 }
 
 .slack-intro-text {
   font-size: 20px;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text-secondary);
   line-height: 1.6;
   margin-bottom: 30px;
 }
 
+.slack-intro-text strong {
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
 .slack-intro-alert {
-  background: rgba(239, 68, 68, 0.15);
+  background: rgba(239, 68, 68, 0.06);
   border: 2px solid #ef4444;
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 20px;
   margin: 30px 0;
   display: flex;
@@ -74,7 +137,7 @@
   font-size: 24px;
   font-weight: 900;
   color: #ef4444;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 }
 
 .slack-intro-skills {
@@ -86,9 +149,9 @@
 }
 
 .skill-tag {
-  background: rgba(59, 130, 246, 0.15);
-  border: 1px solid rgba(59, 130, 246, 0.3);
-  color: #3b82f6;
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.20);
+  color: var(--accent);
   padding: 8px 16px;
   border-radius: 20px;
   font-size: 14px;
@@ -101,6 +164,25 @@
   justify-content: center;
 }
 
+.back-to-menu-btn {
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  padding: 18px 40px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--t);
+}
+
+.back-to-menu-btn:hover {
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card);
+}
+
 .start-btn {
   background: linear-gradient(135deg, #ef4444, #dc2626);
   color: white;
@@ -110,33 +192,36 @@
   font-size: 18px;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 20px rgba(239, 68, 68, 0.4);
+  transition: all var(--t);
+  box-shadow: 0 4px 20px rgba(239, 68, 68, 0.30);
 }
 
 .start-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 25px rgba(239, 68, 68, 0.6);
+  box-shadow: 0 8px 30px rgba(239, 68, 68, 0.40);
 }
 
-/* Crisis Screen */
+/* ============================================
+   CRISIS SCREEN
+   ============================================ */
+
 .slack-container {
   min-height: 100vh;
-  background: #1a1d21;
+  background: var(--bg-deep);
   display: flex;
   flex-direction: column;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: var(--font-sans);
 }
 
 /* Header */
 .slack-header {
-  background: #350d36;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--slack-purple-light);
+  border-bottom: 1px solid var(--border-subtle);
   padding: 12px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-card);
 }
 
 .slack-header-left {
@@ -148,12 +233,12 @@
 .slack-logo {
   font-size: 24px;
   font-weight: 900;
-  color: white;
+  color: var(--slack-purple);
 }
 
 .workspace-name {
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-secondary);
   font-weight: 600;
 }
 
@@ -171,26 +256,27 @@
 
 .timer-label {
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-muted);
   font-weight: 700;
   letter-spacing: 0.5px;
+  font-family: var(--font-mono);
 }
 
 .timer-value {
   font-size: 20px;
   font-weight: 900;
-  color: #3b82f6;
-  font-family: 'Courier New', monospace;
+  color: var(--accent);
+  font-family: var(--font-mono);
 }
 
 .demo-timer {
   display: flex;
   gap: 8px;
   align-items: center;
-  background: rgba(239, 68, 68, 0.15);
+  background: rgba(239, 68, 68, 0.08);
   padding: 8px 16px;
   border-radius: 8px;
-  border: 1px solid rgba(239, 68, 68, 0.3);
+  border: 1px solid rgba(239, 68, 68, 0.20);
 }
 
 .demo-timer.critical {
@@ -202,24 +288,31 @@
   color: #ef4444;
   font-weight: 700;
   letter-spacing: 0.5px;
+  font-family: var(--font-mono);
 }
 
 .demo-value {
   font-size: 20px;
   font-weight: 900;
   color: #ef4444;
-  font-family: 'Courier New', monospace;
+  font-family: var(--font-mono);
+}
+
+.slack-header-right {
+  display: flex;
+  gap: 10px;
 }
 
 .help-btn {
-  background: rgba(239, 68, 68, 0.2);
-  border: 2px solid #ef4444;
+  background: rgba(239, 68, 68, 0.08);
+  border: 2px solid rgba(239, 68, 68, 0.25);
   color: #ef4444;
   padding: 10px 20px;
   border-radius: 8px;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--t);
+  font-family: var(--font-sans);
 }
 
 .finish-btn {
@@ -230,19 +323,19 @@
   border-radius: 8px;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.3s ease;
-  margin-right: 10px;
-  box-shadow: 0 2px 10px rgba(16, 185, 129, 0.3);
+  transition: all var(--t);
+  box-shadow: 0 2px 10px rgba(16, 185, 129, 0.25);
+  font-family: var(--font-sans);
 }
 
 .finish-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.5);
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35);
 }
 
 .help-btn:hover {
-  background: #ef4444;
-  color: white;
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.35);
 }
 
 /* Main Content */
@@ -255,22 +348,36 @@
 /* Sidebar */
 .slack-sidebar {
   width: 320px;
-  background: #3f0e40;
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--surface);
+  border-right: 1px solid var(--border-subtle);
   display: flex;
   flex-direction: column;
 }
 
 .sidebar-header {
   padding: 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .sidebar-header h3 {
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text-primary);
   font-size: 16px;
   font-weight: 700;
   margin: 0;
+}
+
+.pending-count {
+  font-size: 12px;
+  color: #ef4444;
+  font-weight: 700;
+  background: rgba(239, 68, 68, 0.08);
+  padding: 4px 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(239, 68, 68, 0.20);
+  font-family: var(--font-mono);
 }
 
 .threads-list {
@@ -280,23 +387,26 @@
 }
 
 .thread-item {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--elevated);
+  border: 1px solid var(--border-subtle);
   border-radius: 8px;
   padding: 12px;
   margin-bottom: 8px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--t);
 }
 
 .thread-item:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: var(--surface);
+  border-color: var(--border-strong);
+  transform: translateX(2px);
+  box-shadow: var(--shadow-card);
 }
 
 .thread-item.active {
-  background: rgba(59, 130, 246, 0.15);
-  border-color: #3b82f6;
+  background: rgba(59, 130, 246, 0.08);
+  border-color: rgba(59, 130, 246, 0.25);
+  box-shadow: var(--shadow-card);
 }
 
 .thread-item.critical {
@@ -333,12 +443,18 @@
 .thread-from {
   font-size: 14px;
   font-weight: 700;
-  color: white;
+  color: var(--text-primary);
+}
+
+.thread-role {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
 }
 
 .thread-channel {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-muted);
 }
 
 .unread-badge {
@@ -350,6 +466,7 @@
   border-radius: 10px;
   min-width: 20px;
   text-align: center;
+  font-family: var(--font-mono);
 }
 
 .thread-status {
@@ -367,29 +484,30 @@
   padding: 2px 6px;
   border-radius: 4px;
   font-weight: 700;
+  font-family: var(--font-mono);
 }
 
 .status-badge.handled {
-  background: rgba(16, 185, 129, 0.2);
-  color: #10b981;
+  background: rgba(16, 185, 129, 0.10);
+  color: #059669;
 }
 
 .status-badge.pending {
-  background: rgba(245, 158, 11, 0.2);
-  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.10);
+  color: #d97706;
 }
 
 /* Thread View */
 .slack-thread {
   flex: 1;
-  background: #1a1d21;
+  background: var(--bg-deep);
   display: flex;
   flex-direction: column;
 }
 
 .thread-header-bar {
-  background: #222529;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border-subtle);
   padding: 15px 20px;
   display: flex;
   justify-content: space-between;
@@ -409,12 +527,12 @@
 .thread-name {
   font-size: 16px;
   font-weight: 700;
-  color: white;
+  color: var(--text-primary);
 }
 
 .thread-channel-name {
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-secondary);
 }
 
 .thread-actions {
@@ -428,18 +546,19 @@
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--t);
   border: none;
+  font-family: var(--font-sans);
 }
 
 .action-btn.handled {
-  background: rgba(16, 185, 129, 0.2);
-  color: #10b981;
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  background: rgba(16, 185, 129, 0.10);
+  color: #059669;
+  border: 1px solid rgba(16, 185, 129, 0.25);
 }
 
 .action-btn.handled:hover {
-  background: rgba(16, 185, 129, 0.3);
+  background: rgba(16, 185, 129, 0.15);
 }
 
 /* Messages */
@@ -450,6 +569,7 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
+  background: var(--bg-deep);
 }
 
 .message {
@@ -476,26 +596,29 @@
 .message-from {
   font-size: 13px;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text-primary);
 }
 
 .message-time {
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
 }
 
 .message-text {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
   padding: 12px 16px;
   border-radius: 12px;
   font-size: 14px;
   line-height: 1.5;
-  color: rgba(255, 255, 255, 0.95);
+  color: var(--text-primary);
 }
 
 .user-message .message-text {
-  background: rgba(59, 130, 246, 0.2);
-  border: 1px solid rgba(59, 130, 246, 0.3);
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  color: var(--text-primary);
 }
 
 .message-reactions {
@@ -505,7 +628,8 @@
 }
 
 .message-reactions span {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.20);
   padding: 2px 8px;
   border-radius: 10px;
   font-size: 14px;
@@ -513,8 +637,8 @@
 
 /* Input */
 .message-input-container {
-  background: #222529;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--surface);
+  border-top: 1px solid var(--border-subtle);
   padding: 20px;
   display: flex;
   gap: 12px;
@@ -523,11 +647,11 @@
 
 .message-input {
   flex: 1;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: var(--elevated);
+  border: 1px solid var(--border-subtle);
   border-radius: 8px;
   padding: 12px 16px;
-  color: white;
+  color: var(--text-primary);
   font-size: 14px;
   font-family: inherit;
   resize: none;
@@ -537,28 +661,31 @@
 
 .message-input:focus {
   outline: none;
-  border-color: #3b82f6;
-  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--accent);
+  background: var(--bg-deep);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.10);
 }
 
 .message-input::placeholder {
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-muted);
 }
 
 .send-btn {
-  background: #3b82f6;
+  background: var(--accent);
   color: white;
   border: none;
   padding: 12px 24px;
   border-radius: 8px;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--t);
+  font-family: var(--font-sans);
 }
 
 .send-btn:hover:not(:disabled) {
   background: #2563eb;
   transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.30);
 }
 
 .send-btn:disabled {
@@ -573,7 +700,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--text-muted);
 }
 
 .placeholder-icon {
@@ -584,63 +711,22 @@
 
 .no-thread-selected p {
   font-size: 18px;
+  color: var(--text-secondary);
 }
 
-/* Outcome Screen */
-.slack-outcome {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #0f1419 0%, #1a1a2e 100%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 40px;
-}
-
-.outcome-summary {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
-  padding: 40px;
-  margin: 40px 0;
-  text-align: center;
-}
-
-.outcome-stat {
-  margin: 20px 0;
-}
-
-.stat-label {
+.hint-text {
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.6);
-  margin-bottom: 8px;
+  color: var(--text-muted);
+  margin-top: 10px;
 }
 
-.stat-value {
-  font-size: 48px;
-  font-weight: 900;
-  color: #3b82f6;
-}
-
-/* Responsive */
-@media (max-width: 968px) {
-  .slack-sidebar {
-    width: 260px;
-  }
-  
-  .slack-header-center {
-    flex-direction: column;
-    gap: 10px;
-  }
-}
-
-/* ============================================ */
-/* TUTORIAL SCREEN */
-/* ============================================ */
+/* ============================================
+   TUTORIAL SCREEN
+   ============================================ */
 
 .slack-tutorial {
   min-height: 100vh;
-  background: linear-gradient(135deg, #0f1419 0%, #1a1a2e 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -649,10 +735,11 @@
 
 .tutorial-content {
   max-width: 900px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--elevated);
+  border: 1px solid var(--border-strong);
   border-radius: 20px;
   padding: 40px;
+  box-shadow: var(--shadow-card);
 }
 
 .tutorial-header {
@@ -663,13 +750,14 @@
 .tutorial-header h2 {
   font-size: 36px;
   font-weight: 900;
-  color: #ffffff;
+  color: var(--text-primary);
   margin-bottom: 10px;
+  letter-spacing: -0.02em;
 }
 
 .tutorial-header p {
   font-size: 18px;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-secondary);
 }
 
 .tutorial-sections {
@@ -679,8 +767,8 @@
 }
 
 .tutorial-section {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
   border-radius: 12px;
   padding: 25px;
   display: flex;
@@ -695,13 +783,13 @@
 .tutorial-section h3 {
   font-size: 20px;
   font-weight: 700;
-  color: #3b82f6;
+  color: var(--accent);
   margin-bottom: 10px;
 }
 
 .tutorial-section p {
   font-size: 15px;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--text-secondary);
   line-height: 1.6;
   margin-bottom: 15px;
 }
@@ -714,7 +802,7 @@
 
 .tutorial-section li {
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--text-secondary);
   line-height: 1.8;
   padding-left: 20px;
   position: relative;
@@ -725,12 +813,12 @@
   content: '•';
   position: absolute;
   left: 0;
-  color: #3b82f6;
+  color: var(--accent);
   font-weight: 900;
 }
 
 .tutorial-section strong {
-  color: #ffffff;
+  color: var(--text-primary);
   font-weight: 700;
 }
 
@@ -739,23 +827,25 @@
   gap: 20px;
   justify-content: center;
   padding-top: 20px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid var(--border-subtle);
 }
 
 .tutorial-back-btn {
-  background: rgba(255, 255, 255, 0.05);
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  color: rgba(255, 255, 255, 0.8);
+  background: var(--surface);
+  border: 2px solid var(--border-subtle);
+  color: var(--text-secondary);
   padding: 15px 30px;
   border-radius: 10px;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--t);
+  font-family: var(--font-sans);
 }
 
 .tutorial-back-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.4);
+  background: var(--elevated);
+  border-color: var(--border-strong);
+  color: var(--text-primary);
 }
 
 .tutorial-start-btn {
@@ -767,47 +857,23 @@
   font-size: 18px;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 20px rgba(239, 68, 68, 0.4);
+  transition: all var(--t);
+  box-shadow: 0 4px 20px rgba(239, 68, 68, 0.30);
+  font-family: var(--font-sans);
 }
 
 .tutorial-start-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 25px rgba(239, 68, 68, 0.6);
+  box-shadow: 0 6px 25px rgba(239, 68, 68, 0.40);
 }
 
-/* ============================================ */
-/* SIDEBAR ENHANCEMENTS */
-/* ============================================ */
-
-.pending-count {
-  font-size: 12px;
-  color: #ef4444;
-  font-weight: 700;
-  background: rgba(239, 68, 68, 0.15);
-  padding: 4px 10px;
-  border-radius: 12px;
-  border: 1px solid rgba(239, 68, 68, 0.3);
-}
-
-.thread-role {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.hint-text {
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.5);
-  margin-top: 10px;
-}
-
-/* ============================================ */
-/* OUTCOME SCREEN - ENHANCED */
-/* ============================================ */
+/* ============================================
+   OUTCOME SCREEN
+   ============================================ */
 
 .slack-outcome {
   min-height: 100vh;
-  background: linear-gradient(135deg, #0f1419 0%, #1a1a2e 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
   padding: 40px;
   overflow-y: auto;
 }
@@ -821,19 +887,22 @@
   font-size: 48px;
   font-weight: 900;
   text-align: center;
-  background: linear-gradient(135deg, #ef4444, #f59e0b);
+  background: linear-gradient(135deg, #ef4444 0%, #f59e0b 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin-bottom: 40px;
+  letter-spacing: -0.02em;
 }
 
 .outcome-summary {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--elevated);
+  border: 1px solid var(--border-subtle);
   border-radius: 20px;
   padding: 40px;
   margin-bottom: 30px;
   text-align: center;
+  box-shadow: var(--shadow-card);
 }
 
 .outcome-main-score {
@@ -846,18 +915,20 @@
 .main-score-value {
   font-size: 80px;
   font-weight: 900;
-  background: linear-gradient(135deg, #3b82f6, #60a5fa);
+  background: linear-gradient(135deg, var(--accent), #60a5fa);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  background-clip: text;
   line-height: 1;
 }
 
 .main-score-label {
   font-size: 18px;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-muted);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1px;
+  font-family: var(--font-mono);
 }
 
 .recommendation-tag {
@@ -872,22 +943,23 @@
 
 .rec-description {
   font-size: 16px;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-secondary);
   margin-top: 10px;
 }
 
 .outcome-breakdown {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--elevated);
+  border: 1px solid var(--border-subtle);
   border-radius: 20px;
   padding: 30px;
   margin-bottom: 30px;
+  box-shadow: var(--shadow-card);
 }
 
 .outcome-breakdown h3 {
   font-size: 24px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-primary);
   margin-bottom: 25px;
 }
 
@@ -905,7 +977,7 @@
 .score-item-label {
   font-size: 15px;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text-primary);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -914,35 +986,36 @@
 .score-item-value {
   font-size: 32px;
   font-weight: 900;
-  color: #3b82f6;
+  color: var(--accent);
 }
 
 .score-item-bar {
   height: 8px;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--surface);
   border-radius: 10px;
   overflow: hidden;
 }
 
 .score-item-fill {
   height: 100%;
-  background: linear-gradient(90deg, #3b82f6, #60a5fa);
+  background: linear-gradient(90deg, var(--accent), #60a5fa);
   border-radius: 10px;
   transition: width 1s ease;
 }
 
 .outcome-results {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--elevated);
+  border: 1px solid var(--border-subtle);
   border-radius: 20px;
   padding: 30px;
   margin-bottom: 30px;
+  box-shadow: var(--shadow-card);
 }
 
 .outcome-results h3 {
   font-size: 24px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-primary);
   margin-bottom: 25px;
 }
 
@@ -953,8 +1026,8 @@
 }
 
 .result-item {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
   border-radius: 12px;
   padding: 20px;
   display: flex;
@@ -964,17 +1037,17 @@
 
 .result-item.success {
   border-left: 4px solid #10b981;
-  background: rgba(16, 185, 129, 0.08);
+  background: rgba(16, 185, 129, 0.04);
 }
 
 .result-item.warning {
   border-left: 4px solid #f59e0b;
-  background: rgba(245, 158, 11, 0.08);
+  background: rgba(245, 158, 11, 0.04);
 }
 
 .result-item.error {
   border-left: 4px solid #ef4444;
-  background: rgba(239, 68, 68, 0.08);
+  background: rgba(239, 68, 68, 0.04);
 }
 
 .result-icon {
@@ -988,16 +1061,17 @@
 
 .result-label {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-muted);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin-bottom: 4px;
+  font-family: var(--font-mono);
 }
 
 .result-value {
   font-size: 16px;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text-primary);
   font-weight: 700;
 }
 
@@ -1007,21 +1081,35 @@
   padding-top: 20px;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .tutorial-section {
-    flex-direction: column;
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 968px) {
+  .slack-sidebar {
+    width: 260px;
   }
-  
+
+  .slack-header-center {
+    flex-direction: column;
+    gap: 10px;
+  }
+
   .results-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .main-score-value {
     font-size: 60px;
   }
-  
+
   .outcome-title {
     font-size: 36px;
+  }
+}
+
+@media (max-width: 768px) {
+  .tutorial-section {
+    flex-direction: column;
   }
 }

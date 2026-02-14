@@ -3,6 +3,7 @@ import './ChallengeMenu.css';
 import DailyChallenge from './DailyChallenge';
 import SlackChallenge from './SlackChallenge';
 import RetroChallenge from './RetroChallenge';
+import RetroChallengeTheatrical from './RetroChallengeTheatrical';
 
 
 const ChallengeMenu = () => {
@@ -18,9 +19,14 @@ const ChallengeMenu = () => {
   if (selectedChallenge === 2) {
     return <SlackChallenge language={language} onBack={() => setSelectedChallenge(null)} />;
   }
+
   if (selectedChallenge === 3) {
-  return <RetroChallenge language={language} onBack={() => setSelectedChallenge(null)} />;
-}
+    return <RetroChallenge language={language} onBack={() => setSelectedChallenge(null)} />;
+  }
+
+  if (selectedChallenge === 4) {
+    return <RetroChallengeTheatrical language={language} onBack={() => setSelectedChallenge(null)} />;
+  }
 
   // Menú principal
 return (
@@ -38,32 +44,11 @@ return (
 
             <div className="intro-story">
               <p className="intro-lead">
-            
-                Esta semana viene cargada de desafios para el Scrum Team... El fin del sprint 17 es en tres días. 
-                El tablero está en amarillo tirando a rojo, pero nada explotó… todavía. Abrís la notebook y 
+
+                Esta semana viene cargada de desafios para el Scrum Team... El fin del sprint 17 es en tres días.
+                El tablero está en amarillo tirando a rojo, pero nada explotó… todavía. Abrís la notebook y
                 te encontras con notificaciones, mensajes y mails para chequear... pero ya esta por empezar la daily, la primera de la semana.
               </p>
-
-              <div className="intro-alerts">
-                <div className="intro-alert critical">
-                  <span className="alert-icon">💬</span>
-                  <div>
-                    <strong>Slack</strong> 5 mensajes sin leer
-                  </div>
-                </div>
-                <div className="intro-alert warning">
-                  <span className="alert-icon">📅</span>
-                  <div>
-                    <strong>Sprint</strong> Termina en 3 días - 60% completado
-                  </div>
-                </div>
-                <div className="intro-alert danger">
-                  <span className="alert-icon">📧</span>
-                  <div>
-                    <strong>Mails</strong> 10 sin leer
-                  </div>
-                </div>
-              </div>
 
               <div className="intro-briefing">
                 <h3>🎯 Lo que vas a enfrentar:</h3>
@@ -189,23 +174,38 @@ return (
         </div>
 
         {/* CHALLENGE 4 */}
-        <div className="challenge-card locked">
+        <div className="challenge-card locked"> 
           <div className="challenge-number">04</div>
           <div className="challenge-icon">📋</div>
           <h3>Priority Chaos</h3>
           <p className="challenge-skill">Backlog Prioritization</p>
           <div className="challenge-status">
-            <span className="status-badge locked">🔒 Locked</span>
+            <span className="status-badge available">available</span>
             <span className="duration">⏱️ 10 min</span>
           </div>
         </div>
 
         {/* CHALLENGE 5 */}
         <div className="challenge-card available" onClick={() => setSelectedChallenge(3)}>
-  <div className="challenge-number">03</div>
+  <div className="challenge-number">05</div>
   <div className="challenge-icon">🔄</div>
   <h3>The Retro That Doesn't Work</h3>
   <p className="challenge-skill">Facilitation & Root Cause Analysis</p>
+  <div className="challenge-status">
+    <span className="status-badge available">Available</span>
+    <span className="duration">⏱️ 15 min</span>
+  </div>
+</div>
+
+{/* CHALLENGE 6 */}
+<div
+  className="challenge-card available"
+  onClick={() => setSelectedChallenge(4)}
+>
+  <div className="challenge-number">06</div>
+  <div className="challenge-icon">🎭</div>
+  <h3>Retro: Theatrical Edition</h3>
+  <p className="challenge-skill">Facilitation Under Emotional Pressure</p>
   <div className="challenge-status">
     <span className="status-badge available">Available</span>
     <span className="duration">⏱️ 15 min</span>

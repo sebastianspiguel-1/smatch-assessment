@@ -202,51 +202,51 @@ const translations = {
 // Función helper para obtener texto traducido
 const t = (key) => translations[language][key] || key;
   const teamMembers = [
-  { 
-    id: 1, 
+  {
+    id: 1,
     name: 'Alex',
     role: 'Backend Dev',
-    avatarUrl: 'https://i.pravatar.cc/200?img=12',
+    avatarUrl: 'https://randomuser.me/api/portraits/men/32.jpg',
     status: 'camera-off',
     mood: 'stressed',
     issue: 'blocked-silent',
     details: 'Has been stuck on API endpoints for 2 days. Not asking for help. Camera off - red flag.'
   },
-  { 
-    id: 2, 
+  {
+    id: 2,
     name: 'Jordan',
     role: 'Frontend Dev',
-    avatarUrl: 'https://i.pravatar.cc/200?img=32',
+    avatarUrl: 'https://randomuser.me/api/portraits/women/44.jpg',
     status: 'online',
     mood: 'frustrated',
     issue: 'interrupts',
     details: 'Work is blocked waiting for Alex. Getting impatient. Interrupting constantly.'
   },
-  { 
-    id: 3, 
+  {
+    id: 3,
     name: 'Sam',
     role: 'QA Engineer',
-    avatarUrl: 'https://i.pravatar.cc/200?img=47',
+    avatarUrl: 'https://randomuser.me/api/portraits/men/22.jpg',
     status: 'online',
     mood: 'disengaged',
     issue: 'silent-frustrated',
     details: 'Silent, arms crossed, looking away. Something is bothering them but not speaking up.'
   },
-  { 
-    id: 4, 
+  {
+    id: 4,
     name: 'Casey',
     role: 'Designer',
-    avatarUrl: 'https://i.pravatar.cc/200?img=68',
+    avatarUrl: 'https://randomuser.me/api/portraits/women/68.jpg',
     status: 'online',
     mood: 'positive',
     issue: 'normal',
     details: 'Collaborative and positive. No issues detected.'
   },
-  { 
-    id: 5, 
+  {
+    id: 5,
     name: 'Morgan',
     role: 'Product Owner',
-    avatarUrl: 'https://i.pravatar.cc/200?img=35',
+    avatarUrl: 'https://randomuser.me/api/portraits/women/90.jpg',
     status: 'late',
     mood: 'distracted',
     issue: 'distracted',
@@ -353,49 +353,83 @@ const jiraTickets = [
   const speakDialogue = (text, speakerId) => {
   // Si está muteado, no reproducir
   if (audioMuted) return;
-  
+
   // Cancelar cualquier audio anterior
   window.speechSynthesis.cancel();
-  
+
   const utterance = new SpeechSynthesisUtterance(text);
-  const voices = window.speechSynthesis.getVoices();
-  
-  // Asignar voces según personaje
+
+  // Esperar a que las voces estén cargadas
+  let voices = window.speechSynthesis.getVoices();
+  if (voices.length === 0) {
+    window.speechSynthesis.addEventListener('voiceschanged', () => {
+      voices = window.speechSynthesis.getVoices();
+    });
+  }
+
+  // Configuración mejorada según personaje
   switch(speakerId) {
-    case 0: // You (Scrum Master)
-      utterance.voice = voices.find(v => v.name.includes('Samantha') || v.name.includes('Karen')) || voices[0];
-      utterance.pitch = 1;
-      utterance.rate = 1;
+    case 0: // You (Scrum Master) - Voz profesional, clara
+      utterance.voice = voices.find(v =>
+        v.lang.includes('en') && (v.name.includes('Samantha') || v.name.includes('Karen') || v.name.includes('Female'))
+      ) || voices[0];
+      utterance.pitch = 1.0;
+      utterance.rate = 0.95;
+      utterance.volume = 1.0;
       break;
-    case 1: // Alex (Backend Dev) - Voz masculina grave, insegura
-      utterance.voice = voices.find(v => v.name.includes('Daniel') || v.name.includes('Fred')) || voices[1];
-      utterance.pitch = 0.8;
-      utterance.rate = 0.9;
+
+    case 1: // Alex (Backend Dev) - Voz masculina insegura, dubitativa
+      utterance.voice = voices.find(v =>
+        v.lang.includes('en') && (v.name.includes('Daniel') || v.name.includes('Fred') || v.name.includes('Male'))
+      ) || voices[1];
+      utterance.pitch = 0.85;
+      utterance.rate = 0.85;
+      utterance.volume = 0.85;
       break;
-    case 2: // Jordan (Frontend Dev) - Voz femenina frustrada, rápida
-      utterance.voice = voices.find(v => v.name.includes('Samantha') || v.name.includes('Victoria')) || voices[2];
-      utterance.pitch = 1.2;
-      utterance.rate = 1.1;
+
+    case 2: // Jordan (Frontend Dev) - Voz femenina frustrada, impaciente
+      utterance.voice = voices.find(v =>
+        v.lang.includes('en') && (v.name.includes('Victoria') || v.name.includes('Samantha') || v.name.includes('Female'))
+      ) || voices[2];
+      utterance.pitch = 1.15;
+      utterance.rate = 1.15;
+      utterance.volume = 0.95;
       break;
-    case 3: // Sam (QA) - Voz neutral, monótona
-      utterance.voice = voices.find(v => v.name.includes('Alex')) || voices[3];
-      utterance.pitch = 0.9;
-      utterance.rate = 0.8;
+
+    case 3: // Sam (QA) - Voz neutral, monótona, desenganchada
+      utterance.voice = voices.find(v =>
+        v.lang.includes('en') && v.name.includes('Alex')
+      ) || voices[3];
+      utterance.pitch = 0.95;
+      utterance.rate = 0.75;
+      utterance.volume = 0.7;
       break;
-    case 4: // Casey (Designer) - Voz alegre, energética
-      utterance.voice = voices.find(v => v.name.includes('Samantha') || v.name.includes('Tessa')) || voices[4];
-      utterance.pitch = 1.3;
-      utterance.rate = 1.0;
+
+    case 4: // Casey (Designer) - Voz alegre, energética, positiva
+      utterance.voice = voices.find(v =>
+        v.lang.includes('en') && (v.name.includes('Tessa') || v.name.includes('Samantha') || v.name.includes('Female'))
+      ) || voices[4];
+      utterance.pitch = 1.25;
+      utterance.rate = 1.05;
+      utterance.volume = 1.0;
       break;
-    case 5: // Morgan (PO) - Voz distraída, apresurada
-      utterance.voice = voices.find(v => v.name.includes('Victoria') || v.name.includes('Allison')) || voices[5];
+
+    case 5: // Morgan (PO) - Voz distraída, apurada
+      utterance.voice = voices.find(v =>
+        v.lang.includes('en') && (v.name.includes('Victoria') || v.name.includes('Allison') || v.name.includes('Female'))
+      ) || voices[5];
       utterance.pitch = 1.1;
-      utterance.rate = 1.2;
+      utterance.rate = 1.25;
+      utterance.volume = 0.9;
       break;
+
     default:
       utterance.voice = voices[0];
+      utterance.pitch = 1.0;
+      utterance.rate = 1.0;
+      utterance.volume = 1.0;
   }
-  
+
   window.speechSynthesis.speak(utterance);
 };
 
@@ -526,7 +560,7 @@ const jiraTickets = [
         <>
           <div className="zoom-grid">
             {teamMembers.map(member => (
-              <div 
+              <div
                 key={member.id}
                 className={`zoom-participant ${activeSpeaker === member.id ? 'speaking' : ''} ${member.status}`}
                 onClick={() => setSelectedMember(member)}
@@ -534,15 +568,29 @@ const jiraTickets = [
                 <div className="participant-video">
                   {member.status === 'camera-off' ? (
                     <div className="camera-off-screen">
-                      <img src={member.avatarUrl} alt={member.name} className="avatar-zoom" />
                       <p>Camera Off</p>
                     </div>
                   ) : (
                     <img src={member.avatarUrl} alt={member.name} className="avatar-zoom" />
                   )}
-                  <div className="participant-name">{member.name}</div>
+
+                  {/* Participant Info Bar */}
+                  <div className="participant-info-bar">
+                    <div className="participant-name">{member.name}</div>
+                    <div className="participant-role">{member.role}</div>
+                  </div>
+
+                  {/* Speaking Indicator */}
                   {activeSpeaker === member.id && (
-                    <div className="speaking-indicator">🔊 Speaking...</div>
+                    <div className="speaking-indicator">🔊 Speaking</div>
+                  )}
+
+                  {/* Status Badge */}
+                  {member.status === 'late' && (
+                    <div className="status-badge-zoom late">Late</div>
+                  )}
+                  {member.status === 'camera-off' && (
+                    <div className="status-badge-zoom camera-off-badge">📷 Off</div>
                   )}
                 </div>
               </div>
